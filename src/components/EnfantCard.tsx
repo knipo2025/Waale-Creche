@@ -11,9 +11,9 @@ import { totalPaiementsRecus } from '../lib/enfants'
 import type { EnfantAvecPaiements } from '../types/enfant'
 
 const GROUPE_COLORS: Record<string, string> = {
-  Bébés: 'bg-sky-100 text-sky-700',
-  Moyens: 'bg-amber-100 text-amber-700',
-  Grands: 'bg-violet-100 text-violet-700',
+  Bébés: 'bg-pin-50 text-pin-700',
+  Moyens: 'bg-terracotta-100 text-terracotta-600',
+  Grands: 'bg-neutre-50 text-ardoise',
 }
 
 export default function EnfantCard({ enfant }: { enfant: EnfantAvecPaiements }) {
@@ -34,10 +34,10 @@ export default function EnfantCard({ enfant }: { enfant: EnfantAvecPaiements }) 
   return (
     <Link
       to={`/enfants/${enfant.id}`}
-      className="flex min-h-20 items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 transition active:bg-slate-50"
+      className="flex min-h-20 items-center justify-between gap-3 rounded-card border border-brume bg-white px-4 py-3 transition active:bg-neutre-50"
     >
       <div className="min-w-0 flex-1">
-        <p className="truncate text-base font-semibold text-slate-900">
+        <p className="truncate font-display text-base font-semibold text-encre">
           {enfant.prenom} {enfant.nom}
         </p>
         <span
@@ -49,16 +49,16 @@ export default function EnfantCard({ enfant }: { enfant: EnfantAvecPaiements }) 
 
       <div className="flex shrink-0 items-center gap-2">
         <div className="text-right">
-          <p className="text-xs text-slate-400">Solde</p>
+          <p className="text-xs text-ardoise">Solde</p>
           <p
-            className={`text-sm font-semibold ${
-              solde > 0 ? 'text-red-600' : 'text-emerald-600'
+            className={`text-sm font-semibold tabular-nums ${
+              solde > 0 ? 'text-critique-600' : 'text-succes-600'
             }`}
           >
             {formatFCFA(solde)}
           </p>
         </div>
-        <ChevronRight size={20} className="text-slate-300" />
+        <ChevronRight size={20} className="text-brume" />
       </div>
     </Link>
   )

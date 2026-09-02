@@ -1,5 +1,9 @@
+import { CalendarOff } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import AppLayout from '../components/AppLayout'
+import Banner from '../components/Banner'
+import EmptyState from '../components/EmptyState'
+import Loading from '../components/Loading'
 import PresenceRow, { type PointageJour } from '../components/PresenceRow'
 import { useAuth } from '../contexts/AuthContext'
 import { listEnfants } from '../lib/enfants'
@@ -56,7 +60,7 @@ export default function PresencesPage() {
   }, [profile?.creche_id])
 
   const enfantsActifs = useMemo(
-    () => enfants.filter((e) => e.statut === 'actif'),
+    () => enfants.filter((e) => e.statut === 'Inscrit'),
     [enfants],
   )
 
@@ -123,35 +127,36 @@ export default function PresencesPage() {
 
   return (
     <AppLayout title="Présences">
-      <div className="mb-4 grid grid-cols-4 gap-2">
-        {[
-          { label: 'Présents', valeur: compteurs.presents, couleur: 'text-emerald-600' },
-          { label: 'Absents', valeur: compteurs.absents, couleur: 'text-slate-600' },
-          { label: 'Malades', valeur: compteurs.malades, couleur: 'text-amber-600' },
-          { label: 'Repas', valeur: compteurs.repasServis, couleur: 'text-sky-600' },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-xl border border-slate-200 bg-white px-2 py-3 text-center"
-          >
-            <p className={`text-xl font-bold ${stat.couleur}`}>{stat.valeur}</p>
-            <p className="text-xs text-slate-500">{stat.label}</p>
-          </div>
-        ))}
-      </div>
+      <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-4 gap-2">
+          {[
+            { label: 'Présents', valeur: compteurs.presents, couleur: 'text-succes-600' },
+            { label: 'Absents', valeur: compteurs.absents, couleur: 'text-critique-600' },
+            { label: 'Malades', valeur: compteurs.malades, couleur: 'text-attention-600' },
+            { label: 'Repas', valeur: compteurs.repasServis, couleur: 'text-terracotta-600' },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-card border border-brume bg-white px-2 py-3 text-center"
+            >
+              <p className={`font-display text-xl font-bold tabular-nums ${stat.couleur}`}>{stat.valeur}</p>
+              <p className="text-xs text-ardoise">{stat.label}</p>
+            </div>
+          ))}
+        </div>
 
-      {error && (
-        <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
-        </p>
-      )}
+        {error && <Banner tone="critique">{error}</Banner>}
 
-      {loading ? (
-        <p className="text-center text-slate-500">Chargement…</p>
-      ) : enfantsActifs.length === 0 ? (
-        <p className="text-center text-slate-500">Aucun enfant actif inscrit.</p>
-      ) : (
-        <ul className="flex flex-col gap-3">
+        {loading ? (
+          <Loading />
+        ) : enfantsActifs.length === 0 ? (
+          <EmptyState
+            icon={CalendarOff}
+            titre="Aucun enfant inscrit"
+            description="Le pointage du jour apparaîtra ici dès qu'un enfant sera inscrit."
+          />
+        ) : (
+          <ul className="flex flex-col gap-3">
           {enfantsActifs.map((enfant) => {
             const presence = presences[enfant.id]
             const pointage: PointageJour = {
@@ -174,9 +179,10 @@ export default function PresencesPage() {
                 onChangeRepas={(repas) => handleChangeRepas(enfant.id, repas)}
               />
             )
-          })}
-        </ul>
-      )}
+            })}
+          </ul>
+        )}
+      </div>
     </AppLayout>
   )
 }

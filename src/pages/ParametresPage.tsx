@@ -1,12 +1,15 @@
+import { Building2 } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
 import AppLayout from '../components/AppLayout'
+import Banner from '../components/Banner'
+import EmptyState from '../components/EmptyState'
 import { useAuth } from '../contexts/AuthContext'
 import { updateCreche } from '../lib/creches'
 import type { CrecheFormValues } from '../types/creche'
 
 const inputClass =
-  'h-14 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200'
-const labelClass = 'text-sm font-medium text-slate-700'
+  'h-14 w-full rounded-xl border border-brume bg-white px-4 text-base text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100'
+const labelClass = 'text-sm font-medium text-ardoise'
 
 function Champ({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -19,8 +22,8 @@ function Champ({ label, children }: { label: string; children: React.ReactNode }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
+    <section className="rounded-card border border-brume bg-white p-4">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ardoise">
         {title}
       </h2>
       <div className="flex flex-col gap-4">{children}</div>
@@ -94,10 +97,11 @@ export default function ParametresPage() {
   if (!creche || !valeurs) {
     return (
       <AppLayout title="Paramètres">
-        <p className="text-center text-slate-500">
-          Aucune crèche configurée. Créez-en une depuis le SQL Editor de Supabase
-          (voir schema.sql), puis revenez sur cet écran.
-        </p>
+        <EmptyState
+          icon={Building2}
+          titre="Aucune crèche configurée"
+          description="Créez-en une depuis le SQL Editor de Supabase (voir schema.sql), puis revenez sur cet écran."
+        />
       </AppLayout>
     )
   }
@@ -105,14 +109,8 @@ export default function ParametresPage() {
   return (
     <AppLayout title="Paramètres">
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {succes && (
-          <p className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-            Paramètres enregistrés.
-          </p>
-        )}
-        {error && (
-          <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
-        )}
+        {succes && <Banner tone="succes">Paramètres enregistrés.</Banner>}
+        {error && <Banner tone="critique">{error}</Banner>}
 
         <Section title="Crèche">
           <Champ label="Nom">
@@ -196,7 +194,7 @@ export default function ParametresPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="h-14 rounded-xl bg-emerald-600 text-lg font-semibold text-white transition active:bg-emerald-700 disabled:opacity-60"
+          className="h-14 rounded-xl bg-pin-600 text-lg font-semibold text-white transition active:bg-pin-700 disabled:opacity-60"
         >
           {submitting ? 'Enregistrement…' : 'Enregistrer'}
         </button>

@@ -1,8 +1,11 @@
-import { Plus } from 'lucide-react'
+import { Plus, Receipt, Users } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import AppLayout from '../components/AppLayout'
+import Banner from '../components/Banner'
+import EmptyState from '../components/EmptyState'
 import EnfantCard from '../components/EnfantCard'
+import Loading from '../components/Loading'
 import PaiementCard from '../components/PaiementCard'
 import { useAuth } from '../contexts/AuthContext'
 import { listEnfants } from '../lib/enfants'
@@ -55,74 +58,84 @@ export default function PaiementsPage() {
 
   return (
     <AppLayout title="Paiements">
-      {recuGenere && (
-        <p className="mb-4 rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          Paiement enregistré — reçu <span className="font-semibold">{recuGenere}</span>
-        </p>
-      )}
+      <div className="flex flex-col gap-4">
+        {recuGenere && (
+          <Banner tone="succes">
+            Paiement enregistré — reçu <span className="font-semibold">{recuGenere}</span>
+          </Banner>
+        )}
 
-      <div className="mb-4 grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1">
-        <button
-          type="button"
-          onClick={() => setOnglet('historique')}
-          className={`h-11 rounded-lg text-sm font-medium transition ${
-            onglet === 'historique'
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-500'
-          }`}
-        >
-          Historique
-        </button>
-        <button
-          type="button"
-          onClick={() => setOnglet('soldes')}
-          className={`h-11 rounded-lg text-sm font-medium transition ${
-            onglet === 'soldes' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500'
-          }`}
-        >
-          Soldes par enfant
-        </button>
-      </div>
+        <div className="grid grid-cols-2 gap-2 rounded-xl bg-neutre-50 p-1">
+          <button
+            type="button"
+            onClick={() => setOnglet('historique')}
+            className={`h-11 rounded-lg text-sm font-medium transition ${
+              onglet === 'historique'
+                ? 'bg-white text-encre shadow-sm'
+                : 'text-ardoise'
+            }`}
+          >
+            Historique
+          </button>
+          <button
+            type="button"
+            onClick={() => setOnglet('soldes')}
+            className={`h-11 rounded-lg text-sm font-medium transition ${
+              onglet === 'soldes' ? 'bg-white text-encre shadow-sm' : 'text-ardoise'
+            }`}
+          >
+            Soldes par enfant
+          </button>
+        </div>
 
-      {error && (
-        <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
-        </p>
-      )}
+        {error && <Banner tone="critique">{error}</Banner>}
 
-      {loading ? (
-        <p className="text-center text-slate-500">Chargement…</p>
-      ) : onglet === 'historique' ? (
-        paiements.length === 0 ? (
-          <p className="text-center text-slate-500">Aucun paiement enregistré.</p>
+        {loading ? (
+          <Loading />
+        ) : onglet === 'historique' ? (
+          paiements.length === 0 ? (
+            <EmptyState
+              icon={Receipt}
+              titre="Aucun paiement"
+              description="Enregistrez un encaissement pour le voir apparaître ici."
+              action={
+                <Link
+                  to="/paiements/nouveau"
+                  className="inline-flex h-12 items-center justify-center rounded-xl bg-pin-600 px-5 text-sm font-semibold text-white transition active:bg-pin-700"
+                >
+                  Enregistrer un paiement
+                </Link>
+              }
+            />
+          ) : (
+            <ul className="flex flex-col gap-3">
+              {paiements.map((paiement) => (
+                <PaiementCard
+                  key={paiement.id}
+                  paiement={paiement}
+                  enfant={enfants.find((e) => e.id === paiement.enfant_id)}
+                  creche={creche}
+                />
+              ))}
+            </ul>
+          )
+        ) : enfants.length === 0 ? (
+          <EmptyState icon={Users} titre="Aucun enfant" description="Aucun enfant enregistré pour le moment." />
         ) : (
           <ul className="flex flex-col gap-3">
-            {paiements.map((paiement) => (
-              <PaiementCard
-                key={paiement.id}
-                paiement={paiement}
-                enfant={enfants.find((e) => e.id === paiement.enfant_id)}
-                creche={creche}
-              />
+            {enfants.map((enfant) => (
+              <li key={enfant.id}>
+                <EnfantCard enfant={enfant} />
+              </li>
             ))}
           </ul>
-        )
-      ) : enfants.length === 0 ? (
-        <p className="text-center text-slate-500">Aucun enfant enregistré.</p>
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {enfants.map((enfant) => (
-            <li key={enfant.id}>
-              <EnfantCard enfant={enfant} />
-            </li>
-          ))}
-        </ul>
-      )}
+        )}
+      </div>
 
       <Link
         to="/paiements/nouveau"
         aria-label="Enregistrer un paiement"
-        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-600 text-white shadow-lg transition active:bg-emerald-700"
+        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-pin-600 text-white shadow-lg transition active:bg-pin-700"
       >
         <Plus size={28} />
       </Link>

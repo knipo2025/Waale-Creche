@@ -142,7 +142,7 @@ function normaliserEnum(valeur, correspondances, defaut) {
   const v = (valeur ?? '').trim().toLowerCase()
   if (!v) return defaut
   for (const [slug, libelles] of Object.entries(correspondances)) {
-    if (slug === v || libelles.some((l) => l.toLowerCase() === v)) return slug
+    if (slug.toLowerCase() === v || libelles.some((l) => l.toLowerCase() === v)) return slug
   }
   return undefined
 }
@@ -160,9 +160,9 @@ const SERVICE_CORRESPONDANCES = {
   demi_journee_apres_midi: ['Demi-journée après-midi'],
 }
 const STATUT_ENFANT_CORRESPONDANCES = {
-  actif: ['Actif'],
-  inactif: ['Inactif'],
-  en_attente: ['En attente'],
+  Inscrit: [],
+  'En attente': [],
+  Sorti: [],
 }
 const TYPE_PAIEMENT_CORRESPONDANCES = {
   mensualite: ['Mensualité'],
@@ -212,7 +212,7 @@ function validerLigneEnfant(ligne, index, crecheId) {
   const optionGarderie = normaliserBooleen(ligne.option_garderie)
   if (optionGarderie === undefined) erreurs.push(`option_garderie invalide : "${ligne.option_garderie}"`)
 
-  const statut = normaliserEnum(ligne.statut, STATUT_ENFANT_CORRESPONDANCES, 'actif')
+  const statut = normaliserEnum(ligne.statut, STATUT_ENFANT_CORRESPONDANCES, 'Inscrit')
   if (!statut) erreurs.push(`statut invalide : "${ligne.statut}"`)
 
   const dateInscription = normaliserDate(ligne.date_inscription)

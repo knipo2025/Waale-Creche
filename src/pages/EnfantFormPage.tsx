@@ -1,6 +1,8 @@
 import { ArrowLeft } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import Banner from '../components/Banner'
+import { PleinEcranLoading } from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
 import { createEnfant, getEnfant, updateEnfant } from '../lib/enfants'
 import { todayIso } from '../lib/format'
@@ -22,7 +24,7 @@ function valeursVides(): EnfantFormValues {
     service: 'journee_complete',
     option_repas: false,
     option_garderie: false,
-    statut: 'actif',
+    statut: 'Inscrit',
     date_inscription: todayIso(),
     allergies: '',
     medecin_nom: '',
@@ -46,8 +48,8 @@ function videVersNull(valeur: string): string | null {
 }
 
 const inputClass =
-  'h-14 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200'
-const labelClass = 'text-sm font-medium text-slate-700'
+  'h-14 w-full rounded-xl border border-brume bg-white px-4 text-base text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100'
+const labelClass = 'text-sm font-medium text-ardoise'
 
 function Champ({
   label,
@@ -66,8 +68,8 @@ function Champ({
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
+    <section className="rounded-card border border-brume bg-white p-4">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ardoise">
         {title}
       </h2>
       <div className="flex flex-col gap-4">{children}</div>
@@ -154,7 +156,13 @@ export default function EnfantFormPage() {
         isEdition && id
           ? await updateEnfant(id, payload)
           : await createEnfant(payload, profile.creche_id)
-      navigate(`/enfants/${enfant.id}`)
+      navigate(`/enfants/${enfant.id}`, {
+        state: {
+          succes: isEdition
+            ? 'Modifications enregistrées.'
+            : 'Enfant enregistré avec succès.',
+        },
+      })
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Impossible d'enregistrer l'enfant.",
@@ -178,47 +186,39 @@ export default function EnfantFormPage() {
     : null
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <p className="text-slate-500">Chargement…</p>
-      </div>
-    )
+    return <PleinEcranLoading />
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-8">
-      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-4">
+    <div className="min-h-screen bg-papier pb-8">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-brume bg-white px-4 py-4">
         <Link
           to={isEdition && id ? `/enfants/${id}` : '/enfants'}
           aria-label="Retour"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 transition active:bg-slate-100"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="text-lg font-bold text-slate-900">
+        <h1 className="font-display text-lg font-bold text-encre">
           {isEdition ? "Modifier l'enfant" : 'Nouvel enfant'}
         </h1>
       </header>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 py-4">
         {groupe && tarifMensuel !== null && (
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-            <p className="text-sm text-emerald-800">
+          <div className="rounded-card border border-pin-100 bg-pin-50 p-4">
+            <p className="text-sm text-pin-700">
               Âge : <span className="font-semibold">{ageEnMois} mois</span> · Groupe :{' '}
               <span className="font-semibold">{groupe}</span>
             </p>
-            <p className="text-sm text-emerald-800">
+            <p className="text-sm text-pin-700">
               Tarif mensuel :{' '}
-              <span className="font-semibold">{formatFCFA(tarifMensuel)}</span>
+              <span className="font-semibold tabular-nums">{formatFCFA(tarifMensuel)}</span>
             </p>
           </div>
         )}
 
-        {error && (
-          <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </p>
-        )}
+        {error && <Banner tone="critique">{error}</Banner>}
 
         <Section title="Identité">
           <Champ label="Nom">
@@ -274,21 +274,21 @@ export default function EnfantFormPage() {
             </select>
           </Champ>
 
-          <label className="flex min-h-14 items-center justify-between rounded-xl border border-slate-300 bg-white px-4">
+          <label className="flex min-h-14 items-center justify-between rounded-xl border border-brume bg-white px-4">
             <span className={labelClass}>Option repas (+ 8 000 FCFA)</span>
             <input
               type="checkbox"
-              className="h-6 w-6 accent-emerald-600"
+              className="h-6 w-6 accent-pin-600"
               checked={valeurs.option_repas}
               onChange={(e) => setChamp('option_repas', e.target.checked)}
             />
           </label>
 
-          <label className="flex min-h-14 items-center justify-between rounded-xl border border-slate-300 bg-white px-4">
+          <label className="flex min-h-14 items-center justify-between rounded-xl border border-brume bg-white px-4">
             <span className={labelClass}>Option garderie soir (+ 10 000 FCFA)</span>
             <input
               type="checkbox"
-              className="h-6 w-6 accent-emerald-600"
+              className="h-6 w-6 accent-pin-600"
               checked={valeurs.option_garderie}
               onChange={(e) => setChamp('option_garderie', e.target.checked)}
             />
@@ -300,9 +300,9 @@ export default function EnfantFormPage() {
               value={valeurs.statut}
               onChange={(e) => setChamp('statut', e.target.value as Statut)}
             >
-              <option value="actif">Actif</option>
-              <option value="en_attente">En attente</option>
-              <option value="inactif">Inactif</option>
+              <option value="Inscrit">Inscrit</option>
+              <option value="En attente">En attente</option>
+              <option value="Sorti">Sorti</option>
             </select>
           </Champ>
 
@@ -429,7 +429,7 @@ export default function EnfantFormPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="h-14 rounded-xl bg-emerald-600 text-lg font-semibold text-white transition active:bg-emerald-700 disabled:opacity-60"
+          className="h-14 rounded-xl bg-pin-600 text-lg font-semibold text-white transition active:bg-pin-700 disabled:opacity-60"
         >
           {submitting ? 'Enregistrement…' : 'Enregistrer'}
         </button>

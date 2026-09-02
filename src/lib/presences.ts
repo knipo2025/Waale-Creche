@@ -42,10 +42,10 @@ export const STATUT_PRESENCE_LABELS: Record<StatutPresence, string> = {
 }
 
 export const STATUT_PRESENCE_STYLES: Record<StatutPresence, string> = {
-  present: 'bg-emerald-600 text-white border-emerald-600',
-  absent: 'bg-slate-600 text-white border-slate-600',
-  malade: 'bg-amber-500 text-white border-amber-500',
-  conge: 'bg-sky-500 text-white border-sky-500',
+  present: 'bg-succes-600 text-white border-succes-600',
+  absent: 'bg-critique-600 text-white border-critique-600',
+  malade: 'bg-attention-600 text-white border-attention-600',
+  conge: 'bg-pin-600 text-white border-pin-600',
 }
 
 export function heureActuelle(): string {

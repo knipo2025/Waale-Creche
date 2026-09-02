@@ -1,6 +1,8 @@
 import { ArrowLeft, MessageCircle, Pencil } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import Banner from '../components/Banner'
+import { PleinEcranLoading } from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
 import { getEnfant, listEnfants, totalPaiementsRecus } from '../lib/enfants'
 import {
@@ -12,28 +14,28 @@ import {
   SERVICE_LABELS,
 } from '../lib/tariffs'
 import { construireLienRelanceWhatsapp } from '../lib/whatsapp'
-import type { Enfant } from '../types/enfant'
+import type { Enfant, Statut } from '../types/enfant'
 
-const STATUT_LABELS: Record<string, string> = {
-  actif: 'Actif',
-  inactif: 'Inactif',
-  en_attente: 'En attente',
+const STATUT_PILL_STYLES: Record<Statut, string> = {
+  Inscrit: 'bg-succes-50 text-succes-700',
+  'En attente': 'bg-attention-50 text-attention-600',
+  Sorti: 'bg-neutre-50 text-ardoise',
 }
 
 function Champ({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value) return null
   return (
     <div>
-      <p className="text-xs text-slate-400">{label}</p>
-      <p className="text-base text-slate-900">{value}</p>
+      <p className="text-xs text-ardoise">{label}</p>
+      <p className="text-base text-encre">{value}</p>
     </div>
   )
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-4">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
+    <section className="rounded-card border border-brume bg-white p-4">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ardoise">
         {title}
       </h2>
       <div className="flex flex-col gap-3">{children}</div>
@@ -45,6 +47,9 @@ export default function EnfantDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { profile, creche } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const messageSucces = (location.state as { succes?: string } | null)?.succes
+
   const [enfant, setEnfant] = useState<Enfant | null>(null)
   const [totalRecu, setTotalRecu] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -82,23 +87,19 @@ export default function EnfantDetailPage() {
   }, [id, profile?.creche_id])
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <p className="text-slate-500">Chargement…</p>
-      </div>
-    )
+    return <PleinEcranLoading />
   }
 
   if (error || !enfant) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-50 px-6">
-        <p className="text-center text-red-700">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-papier px-6">
+        <p className="text-center text-critique-600">
           {error ?? 'Enfant introuvable.'}
         </p>
         <button
           type="button"
           onClick={() => navigate('/enfants')}
-          className="h-12 rounded-xl bg-slate-900 px-6 text-white"
+          className="h-12 rounded-xl bg-pin-600 px-6 font-semibold text-white"
         >
           Retour à la liste
         </button>
@@ -117,51 +118,56 @@ export default function EnfantDetailPage() {
   const solde = calculerSoldeImpaye(enfant.date_inscription, tarifMensuel, totalRecu)
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-8">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-4">
+    <div className="min-h-screen bg-papier pb-8">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-brume bg-white px-4 py-4">
         <Link
           to="/enfants"
           aria-label="Retour"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 transition active:bg-slate-100"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="truncate text-lg font-bold text-slate-900">
+        <h1 className="truncate font-display text-lg font-bold text-encre">
           {enfant.prenom} {enfant.nom}
         </h1>
         <Link
           to={`/enfants/${enfant.id}/modifier`}
           aria-label="Modifier"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 transition active:bg-slate-100"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
         >
           <Pencil size={20} />
         </Link>
       </header>
 
       <main className="flex flex-col gap-4 px-4 py-4">
-        <section className="rounded-xl border border-slate-200 bg-white p-4">
+        {messageSucces && <Banner tone="succes">{messageSucces}</Banner>}
+
+        <section className="rounded-card border border-brume bg-white p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-500">{groupe} · {ageEnMois} mois</p>
-              <p className="text-sm text-slate-500">
-                {STATUT_LABELS[enfant.statut]} · {SERVICE_LABELS[enfant.service]}
-              </p>
+              <p className="text-sm text-ardoise">{groupe} · {ageEnMois} mois</p>
+              <p className="text-sm text-ardoise">{SERVICE_LABELS[enfant.service]}</p>
+              <span
+                className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUT_PILL_STYLES[enfant.statut]}`}
+              >
+                {enfant.statut}
+              </span>
             </div>
             <div className="text-right">
-              <p className="text-xs text-slate-400">Solde impayé</p>
+              <p className="text-xs text-ardoise">Solde impayé</p>
               <p
-                className={`text-xl font-bold ${
-                  solde > 0 ? 'text-red-600' : 'text-emerald-600'
+                className={`font-display text-xl font-bold tabular-nums ${
+                  solde > 0 ? 'text-critique-600' : 'text-succes-600'
                 }`}
               >
                 {formatFCFA(solde)}
               </p>
             </div>
           </div>
-          <p className="mt-3 text-sm text-slate-500">
-            Tarif mensuel : <span className="font-medium text-slate-900">{formatFCFA(tarifMensuel)}</span>
+          <p className="mt-3 text-sm text-ardoise">
+            Tarif mensuel : <span className="font-medium text-encre">{formatFCFA(tarifMensuel)}</span>
             {(enfant.option_repas || enfant.option_garderie) && (
-              <span className="text-slate-400">
+              <span>
                 {' '}
                 ({[
                   enfant.option_repas ? 'repas' : null,

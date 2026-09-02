@@ -11,7 +11,7 @@ const tabs = [
 export default function BottomNav() {
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)]"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-brume bg-white pb-[env(safe-area-inset-bottom)]"
       aria-label="Navigation principale"
     >
       <ul className="grid grid-cols-4">
@@ -20,8 +20,8 @@ export default function BottomNav() {
             <NavLink
               to={to}
               className={({ isActive }) =>
-                `flex min-h-16 flex-col items-center justify-center gap-1 px-1 py-2 text-xs font-medium transition active:bg-slate-100 ${
-                  isActive ? 'text-emerald-600' : 'text-slate-500'
+                `flex min-h-16 flex-col items-center justify-center gap-1 px-1 py-2 text-xs font-medium transition active:bg-neutre-50 ${
+                  isActive ? 'text-pin-600' : 'text-ardoise'
                 }`
               }
             >

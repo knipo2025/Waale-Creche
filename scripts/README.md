@@ -42,7 +42,7 @@ données d'exemple par les vôtres, sans changer les noms de colonnes.
 | `sexe` | oui | `M` / `F` (ou `Masculin` / `Féminin`) |
 | `service` | oui | `Journée complète`, `Demi-journée matin`, `Demi-journée après-midi` |
 | `option_repas`, `option_garderie` | oui | `oui` / `non` |
-| `statut` | non (défaut `Actif`) | `Actif`, `Inactif`, `En attente` |
+| `statut` | non (défaut `Inscrit`) | `Inscrit`, `En attente`, `Sorti` |
 | `date_inscription` | non (défaut : aujourd'hui) | `AAAA-MM-JJ` ou `JJ/MM/AAAA` |
 | `allergies`, `medecin_nom`, `medecin_telephone` | non | texte libre |
 | `parent1_nom`, `parent1_prenom`, `parent1_telephone` | oui | texte |

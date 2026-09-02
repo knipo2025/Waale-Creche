@@ -14,19 +14,19 @@ export default function AppLayout({
   const { profile, signOut } = useAuth()
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-4 py-4">
+    <div className="flex min-h-screen flex-col bg-papier">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-brume bg-white px-4 py-4">
         <div>
-          <h1 className="text-lg font-bold text-slate-900">{title}</h1>
+          <h1 className="font-display text-lg font-bold text-encre">{title}</h1>
           {profile?.full_name && (
-            <p className="text-sm text-slate-500">{profile.full_name}</p>
+            <p className="text-sm text-ardoise">{profile.full_name}</p>
           )}
         </div>
         <div className="flex items-center gap-1">
           <Link
             to="/parametres"
             aria-label="Paramètres"
-            className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 transition active:bg-slate-100"
+            className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
           >
             <Settings size={20} />
           </Link>
@@ -34,7 +34,7 @@ export default function AppLayout({
             type="button"
             onClick={() => void signOut()}
             aria-label="Se déconnecter"
-            className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 transition active:bg-slate-100"
+            className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
           >
             <LogOut size={22} />
           </button>

@@ -5,7 +5,7 @@ export type Service =
   | 'demi_journee_matin'
   | 'demi_journee_apres_midi'
 
-export type Statut = 'actif' | 'inactif' | 'en_attente'
+export type Statut = 'Inscrit' | 'En attente' | 'Sorti'
 
 export type Groupe = 'Bébés' | 'Moyens' | 'Grands'
 

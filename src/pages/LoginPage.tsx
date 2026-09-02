@@ -1,5 +1,6 @@
 import { type FormEvent, useState } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
+import Banner from '../components/Banner'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function LoginPage() {
@@ -28,12 +29,12 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col justify-center bg-slate-50 px-6 py-12">
+    <main className="flex min-h-screen flex-col justify-center bg-papier px-6 py-12">
       <div className="mx-auto w-full max-w-sm">
-        <h1 className="mb-1 text-center text-2xl font-bold text-slate-900">
+        <h1 className="mb-1 text-center font-display text-2xl font-bold text-encre">
           Waale Crèche
         </h1>
-        <p className="mb-8 text-center text-base text-slate-500">
+        <p className="mb-8 text-center text-base text-ardoise">
           Connectez-vous à votre espace
         </p>
 
@@ -41,7 +42,7 @@ export default function LoginPage() {
           <div className="flex flex-col gap-1">
             <label
               htmlFor="email"
-              className="text-sm font-medium text-slate-700"
+              className="text-sm font-medium text-encre"
             >
               Adresse e-mail
             </label>
@@ -52,7 +53,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="h-14 rounded-xl border border-slate-300 bg-white px-4 text-lg text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+              className="h-14 rounded-xl border border-brume bg-white px-4 text-lg text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100"
               placeholder="vous@exemple.com"
             />
           </div>
@@ -60,7 +61,7 @@ export default function LoginPage() {
           <div className="flex flex-col gap-1">
             <label
               htmlFor="password"
-              className="text-sm font-medium text-slate-700"
+              className="text-sm font-medium text-encre"
             >
               Mot de passe
             </label>
@@ -71,24 +72,21 @@ export default function LoginPage() {
               required
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="h-14 rounded-xl border border-slate-300 bg-white px-4 text-lg text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+              className="h-14 rounded-xl border border-brume bg-white px-4 text-lg text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100"
               placeholder="••••••••"
             />
           </div>
 
           {error && (
-            <p
-              role="alert"
-              className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
-            >
-              {error}
-            </p>
+            <div role="alert">
+              <Banner tone="critique">{error}</Banner>
+            </div>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            className="mt-2 h-14 rounded-xl bg-emerald-600 text-lg font-semibold text-white transition active:bg-emerald-700 disabled:opacity-60"
+            className="mt-2 h-14 rounded-xl bg-pin-600 text-lg font-semibold text-white transition active:bg-pin-700 disabled:opacity-60"
           >
             {submitting ? 'Connexion en cours…' : 'Se connecter'}
           </button>

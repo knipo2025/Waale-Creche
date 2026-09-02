@@ -53,7 +53,7 @@ export const MODE_PAIEMENT_LABELS: Record<ModePaiement, string> = {
 }
 
 export const STATUT_PAIEMENT_STYLES: Record<StatutPaiement, string> = {
-  Reçu: 'bg-emerald-100 text-emerald-700',
-  'En attente': 'bg-amber-100 text-amber-700',
-  Annulé: 'bg-slate-200 text-slate-600',
+  Reçu: 'bg-succes-50 text-succes-700',
+  'En attente': 'bg-attention-50 text-attention-600',
+  Annulé: 'bg-neutre-50 text-ardoise',
 }

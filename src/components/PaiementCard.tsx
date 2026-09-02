@@ -63,20 +63,20 @@ export default function PaiementCard({
   }
 
   return (
-    <li className="rounded-xl border border-slate-200 bg-white p-4">
+    <li className="rounded-card border border-brume bg-white p-4">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="truncate text-base font-semibold text-slate-900">
+          <p className="truncate font-display text-base font-semibold text-encre">
             {paiement.enfant
               ? `${paiement.enfant.prenom} ${paiement.enfant.nom}`
               : 'Enfant supprimé'}
           </p>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-ardoise">
             {TYPE_PAIEMENT_LABELS[paiement.type]}
             {paiement.mois_concerne ? ` · ${formatMoisAnnee(paiement.mois_concerne)}` : ''}
           </p>
         </div>
-        <p className="shrink-0 text-base font-semibold text-slate-900">
+        <p className="shrink-0 font-display text-base font-semibold tabular-nums text-encre">
           {formatFCFA(paiement.montant)}
         </p>
       </div>
@@ -88,22 +88,22 @@ export default function PaiementCard({
           >
             {paiement.statut}
           </span>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-ardoise">
             {MODE_PAIEMENT_LABELS[paiement.mode_paiement]}
           </span>
         </div>
-        <span className="text-xs text-slate-400">{formatDateFr(paiement.date_paiement)}</span>
+        <span className="text-xs text-ardoise">{formatDateFr(paiement.date_paiement)}</span>
       </div>
 
-      <p className="mt-2 font-mono text-xs text-slate-400">{paiement.numero_recu}</p>
+      <p className="mt-2 font-mono text-xs text-ardoise">{paiement.numero_recu}</p>
 
-      {erreur && <p className="mt-2 text-xs text-red-600">{erreur}</p>}
+      {erreur && <p className="mt-2 text-xs text-critique-600">{erreur}</p>}
 
       <button
         type="button"
         onClick={() => void handleRecu()}
         disabled={generation}
-        className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-300 text-sm font-medium text-slate-700 transition active:bg-slate-100 disabled:opacity-60"
+        className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brume text-sm font-medium text-encre transition active:bg-neutre-50 disabled:opacity-60"
       >
         <Receipt size={18} />
         {generation ? 'Génération…' : 'Reçu'}

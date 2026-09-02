@@ -1,6 +1,9 @@
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Users } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import Banner from '../components/Banner'
+import EmptyState from '../components/EmptyState'
+import { PleinEcranLoading } from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
 import { listEnfants } from '../lib/enfants'
 import { moisCourant, todayIso } from '../lib/format'
@@ -20,8 +23,8 @@ import type { EnfantAvecPaiements, StatutPaiement } from '../types/enfant'
 import type { ModePaiement, PaiementFormValues, TypePaiement } from '../types/paiement'
 
 const inputClass =
-  'h-14 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200'
-const labelClass = 'text-sm font-medium text-slate-700'
+  'h-14 w-full rounded-xl border border-brume bg-white px-4 text-base text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100'
+const labelClass = 'text-sm font-medium text-ardoise'
 
 function Champ({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -154,37 +157,41 @@ export default function PaiementFormPage() {
   }
 
   if (loadingEnfants) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <p className="text-slate-500">Chargement…</p>
-      </div>
-    )
+    return <PleinEcranLoading />
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-8">
-      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-4">
+    <div className="min-h-screen bg-papier pb-8">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-brume bg-white px-4 py-4">
         <Link
           to="/paiements"
           aria-label="Retour"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 transition active:bg-slate-100"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="text-lg font-bold text-slate-900">Nouveau paiement</h1>
+        <h1 className="font-display text-lg font-bold text-encre">Nouveau paiement</h1>
       </header>
 
       {enfants.length === 0 ? (
-        <p className="px-4 py-6 text-center text-slate-500">
-          Aucun enfant enregistré. Ajoutez un enfant avant d'enregistrer un paiement.
-        </p>
+        <div className="px-4 py-6">
+          <EmptyState
+            icon={Users}
+            titre="Aucun enfant enregistré"
+            description="Ajoutez un enfant avant d'enregistrer un paiement."
+            action={
+              <Link
+                to="/enfants/nouveau"
+                className="inline-flex h-12 items-center justify-center rounded-xl bg-pin-600 px-5 text-sm font-semibold text-white transition active:bg-pin-700"
+              >
+                Ajouter un enfant
+              </Link>
+            }
+          />
+        </div>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 py-4">
-          {error && (
-            <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-              {error}
-            </p>
-          )}
+          {error && <Banner tone="critique">{error}</Banner>}
 
           <Champ label="Enfant">
             <select
@@ -242,7 +249,7 @@ export default function PaiementFormPage() {
               }}
             />
             {suggestion !== null && (
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-ardoise">
                 Suggestion : {formatFCFA(suggestion)}
               </span>
             )}
@@ -288,7 +295,7 @@ export default function PaiementFormPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="h-14 rounded-xl bg-emerald-600 text-lg font-semibold text-white transition active:bg-emerald-700 disabled:opacity-60"
+            className="h-14 rounded-xl bg-pin-600 text-lg font-semibold text-white transition active:bg-pin-700 disabled:opacity-60"
           >
             {submitting ? 'Enregistrement…' : 'Enregistrer le paiement'}
           </button>

@@ -70,6 +70,13 @@ create table if not exists public.profiles (
   created_at timestamptz not null default now()
 );
 
+-- Migration douce : Supabase crée parfois déjà une table `profiles` minimale
+-- (via un starter/quickstart) avant que ce script ne soit exécuté, auquel cas
+-- `create table if not exists` ci-dessus ne fait rien et ces colonnes peuvent
+-- manquer.
+alter table public.profiles add column if not exists full_name text;
+alter table public.profiles add column if not exists email text;
+
 alter table public.profiles enable row level security;
 
 create policy "profiles_select_own"
@@ -101,7 +108,7 @@ create table if not exists public.enfants (
   option_repas boolean not null default false,
   option_garderie boolean not null default false,
 
-  statut text not null default 'actif' check (statut in ('actif', 'inactif', 'en_attente')),
+  statut text not null default 'Inscrit' check (statut in ('Inscrit', 'En attente', 'Sorti')),
   date_inscription date not null default current_date,
 
   allergies text,
@@ -123,6 +130,50 @@ create table if not exists public.enfants (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Migration douce : si la table `enfants` a été créée à la main (Table Editor)
+-- ou par une exécution partielle de ce script, certaines colonnes peuvent
+-- manquer. Ces ALTER sont sans risque à rejouer (IF NOT EXISTS).
+alter table public.enfants add column if not exists nom text not null default '';
+alter table public.enfants add column if not exists prenom text not null default '';
+alter table public.enfants add column if not exists date_naissance date not null default current_date;
+alter table public.enfants add column if not exists sexe text;
+alter table public.enfants add column if not exists service text;
+alter table public.enfants add column if not exists option_repas boolean not null default false;
+alter table public.enfants add column if not exists option_garderie boolean not null default false;
+alter table public.enfants add column if not exists statut text not null default 'Inscrit';
+alter table public.enfants add column if not exists date_inscription date not null default current_date;
+alter table public.enfants add column if not exists allergies text;
+alter table public.enfants add column if not exists medecin_nom text;
+alter table public.enfants add column if not exists medecin_telephone text;
+alter table public.enfants add column if not exists parent1_nom text not null default '';
+alter table public.enfants add column if not exists parent1_prenom text not null default '';
+alter table public.enfants add column if not exists parent1_telephone text not null default '';
+alter table public.enfants add column if not exists parent1_email text;
+alter table public.enfants add column if not exists parent1_adresse text;
+alter table public.enfants add column if not exists parent2_nom text;
+alter table public.enfants add column if not exists parent2_prenom text;
+alter table public.enfants add column if not exists parent2_telephone text;
+alter table public.enfants add column if not exists parent2_email text;
+alter table public.enfants add column if not exists parent2_adresse text;
+alter table public.enfants add column if not exists updated_at timestamptz not null default now();
+
+-- Contraintes check, ajoutées séparément (plutôt que dans le create table) au
+-- cas où la table existait déjà sans elles. Valeurs alignées exactement sur
+-- les <option value="..."> de src/pages/EnfantFormPage.tsx. Postgres ne
+-- supporte pas "add constraint if not exists" : on passe par
+-- drop ... if exists + add, ce qui est sans risque à rejouer.
+alter table public.enfants drop constraint if exists enfants_sexe_check;
+alter table public.enfants add constraint enfants_sexe_check
+  check (sexe in ('M', 'F'));
+
+alter table public.enfants drop constraint if exists enfants_service_check;
+alter table public.enfants add constraint enfants_service_check
+  check (service in ('journee_complete', 'demi_journee_matin', 'demi_journee_apres_midi'));
+
+alter table public.enfants drop constraint if exists enfants_statut_check;
+alter table public.enfants add constraint enfants_statut_check
+  check (statut in ('Inscrit', 'En attente', 'Sorti'));
 
 create index if not exists enfants_creche_id_idx on public.enfants (creche_id);
 
@@ -285,6 +336,14 @@ create table if not exists public.presences (
 
   unique (enfant_id, date)
 );
+
+-- Migration douce (voir la remarque équivalente sur `enfants`) :
+alter table public.presences add column if not exists date date not null default current_date;
+alter table public.presences add column if not exists statut text;
+alter table public.presences add column if not exists heure_arrivee time;
+alter table public.presences add column if not exists heure_depart time;
+alter table public.presences add column if not exists repas boolean not null default false;
+alter table public.presences add column if not exists updated_at timestamptz not null default now();
 
 create index if not exists presences_creche_id_idx on public.presences (creche_id);
 create index if not exists presences_date_idx on public.presences (date);
