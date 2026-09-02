@@ -1,3 +1,4 @@
+import Avatar from './Avatar'
 import { heureActuelle, STATUT_PRESENCE_STYLES, STATUTS_PRESENCE } from '../lib/presences'
 import type { Enfant } from '../types/enfant'
 import type { StatutPresence } from '../types/presence'
@@ -29,9 +30,12 @@ export default function PresenceRow({
   return (
     <li className="rounded-card border border-brume bg-white p-4">
       <div className="flex items-center justify-between gap-2">
-        <p className="truncate font-display text-base font-semibold text-encre">
-          {enfant.prenom} {enfant.nom}
-        </p>
+        <div className="flex min-w-0 items-center gap-3">
+          <Avatar prenom={enfant.prenom} nom={enfant.nom} />
+          <p className="truncate font-display text-base font-semibold text-encre">
+            {enfant.prenom} {enfant.nom}
+          </p>
+        </div>
         {saving && <span className="shrink-0 text-xs text-ardoise">Enregistrement…</span>}
       </div>
 

@@ -1,6 +1,8 @@
+import { Baby } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import Banner from '../components/Banner'
+import PasswordInput from '../components/PasswordInput'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function LoginPage() {
@@ -31,6 +33,9 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen flex-col justify-center bg-papier px-6 py-12">
       <div className="mx-auto w-full max-w-sm">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-pin-50 text-pin-700">
+          <Baby size={30} />
+        </div>
         <h1 className="mb-1 text-center font-display text-2xl font-bold text-encre">
           Waale Crèche
         </h1>
@@ -65,14 +70,11 @@ export default function LoginPage() {
             >
               Mot de passe
             </label>
-            <input
+            <PasswordInput
               id="password"
-              type="password"
               autoComplete="current-password"
-              required
               value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="h-14 rounded-xl border border-brume bg-white px-4 text-lg text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100"
+              onChange={setPassword}
               placeholder="••••••••"
             />
           </div>

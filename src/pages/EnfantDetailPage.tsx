@@ -1,6 +1,7 @@
 import { ArrowLeft, MessageCircle, Pencil } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import Avatar from '../components/Avatar'
 import Banner from '../components/Banner'
 import { PleinEcranLoading } from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
@@ -144,14 +145,17 @@ export default function EnfantDetailPage() {
 
         <section className="rounded-card border border-brume bg-white p-4">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-ardoise">{groupe} · {ageEnMois} mois</p>
-              <p className="text-sm text-ardoise">{SERVICE_LABELS[enfant.service]}</p>
-              <span
-                className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUT_PILL_STYLES[enfant.statut]}`}
-              >
-                {enfant.statut}
-              </span>
+            <div className="flex items-center gap-3">
+              <Avatar prenom={enfant.prenom} nom={enfant.nom} />
+              <div>
+                <p className="text-sm text-ardoise">{groupe} · {ageEnMois} mois</p>
+                <p className="text-sm text-ardoise">{SERVICE_LABELS[enfant.service]}</p>
+                <span
+                  className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUT_PILL_STYLES[enfant.statut]}`}
+                >
+                  {enfant.statut}
+                </span>
+              </div>
             </div>
             <div className="text-right">
               <p className="text-xs text-ardoise">Solde impayé</p>

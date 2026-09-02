@@ -1,5 +1,6 @@
 import { Receipt } from 'lucide-react'
 import { useState } from 'react'
+import Avatar from './Avatar'
 import { totalPaiementsRecus } from '../lib/enfants'
 import { formatDateFr, formatMoisAnnee } from '../lib/format'
 import { MODE_PAIEMENT_LABELS, STATUT_PAIEMENT_STYLES } from '../lib/paiements'
@@ -61,16 +62,21 @@ export default function PaiementCard({
   return (
     <li className="rounded-card border border-brume bg-white p-4">
       <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="truncate font-display text-base font-semibold text-encre">
-            {paiement.enfant
-              ? `${paiement.enfant.prenom} ${paiement.enfant.nom}`
-              : 'Enfant supprimé'}
-          </p>
-          <p className="text-sm text-ardoise">
-            {paiement.type}
-            {paiement.mois_concerne ? ` · ${formatMoisAnnee(paiement.mois_concerne)}` : ''}
-          </p>
+        <div className="flex min-w-0 items-center gap-3">
+          {paiement.enfant && (
+            <Avatar prenom={paiement.enfant.prenom} nom={paiement.enfant.nom} />
+          )}
+          <div className="min-w-0">
+            <p className="truncate font-display text-base font-semibold text-encre">
+              {paiement.enfant
+                ? `${paiement.enfant.prenom} ${paiement.enfant.nom}`
+                : 'Enfant supprimé'}
+            </p>
+            <p className="text-sm text-ardoise">
+              {paiement.type}
+              {paiement.mois_concerne ? ` · ${formatMoisAnnee(paiement.mois_concerne)}` : ''}
+            </p>
+          </div>
         </div>
         <p className="shrink-0 font-display text-base font-semibold tabular-nums text-encre">
           {formatFCFA(paiement.montant)}

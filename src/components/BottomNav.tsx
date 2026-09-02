@@ -25,8 +25,18 @@ export default function BottomNav() {
                 }`
               }
             >
-              <Icon size={24} strokeWidth={2} />
-              <span className="text-center leading-tight">{label}</span>
+              {({ isActive }) => (
+                <>
+                  <span
+                    className={`flex h-8 w-8 items-center justify-center rounded-full transition ${
+                      isActive ? 'bg-pin-50' : ''
+                    }`}
+                  >
+                    <Icon size={22} strokeWidth={2} />
+                  </span>
+                  <span className="text-center leading-tight">{label}</span>
+                </>
+              )}
             </NavLink>
           </li>
         ))}

@@ -1,5 +1,6 @@
 import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import Avatar from './Avatar'
 import {
   calculerAgeEnMois,
   calculerGroupe,
@@ -36,6 +37,8 @@ export default function EnfantCard({ enfant }: { enfant: EnfantAvecPaiements }) 
       to={`/enfants/${enfant.id}`}
       className="flex min-h-20 items-center justify-between gap-3 rounded-card border border-brume bg-white px-4 py-3 transition active:bg-neutre-50"
     >
+      <Avatar prenom={enfant.prenom} nom={enfant.nom} />
+
       <div className="min-w-0 flex-1">
         <p className="truncate font-display text-base font-semibold text-encre">
           {enfant.prenom} {enfant.nom}
