@@ -71,7 +71,7 @@ export default function PresencesPage() {
     const valeurs: PresenceFormValues = {
       enfant_id: enfantId,
       date: dateDuJour,
-      statut: existant?.statut ?? 'present',
+      statut: existant?.statut ?? 'Présent',
       heure_arrivee: existant?.heure_arrivee ?? null,
       heure_depart: existant?.heure_depart ?? null,
       repas: existant?.repas ?? false,
@@ -101,7 +101,7 @@ export default function PresencesPage() {
   function handleChangeStatut(enfantId: string, statut: StatutPresence) {
     const existant = presences[enfantId]
     const heureArrivee =
-      statut === 'present' ? (existant?.heure_arrivee ?? heureActuelle()) : (existant?.heure_arrivee ?? null)
+      statut === 'Présent' ? (existant?.heure_arrivee ?? heureActuelle()) : (existant?.heure_arrivee ?? null)
     void enregistrer(enfantId, { statut, heure_arrivee: heureArrivee })
   }
 
@@ -119,10 +119,10 @@ export default function PresencesPage() {
 
   const valeursPresences = Object.values(presences)
   const compteurs = {
-    presents: valeursPresences.filter((p) => p.statut === 'present').length,
-    absents: valeursPresences.filter((p) => p.statut === 'absent').length,
-    malades: valeursPresences.filter((p) => p.statut === 'malade').length,
-    repasServis: valeursPresences.filter((p) => p.statut === 'present' && p.repas).length,
+    presents: valeursPresences.filter((p) => p.statut === 'Présent').length,
+    absents: valeursPresences.filter((p) => p.statut === 'Absent').length,
+    malades: valeursPresences.filter((p) => p.statut === 'Malade').length,
+    repasServis: valeursPresences.filter((p) => p.statut === 'Présent' && p.repas).length,
   }
 
   return (

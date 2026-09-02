@@ -39,11 +39,7 @@ export async function createPaiement(
   return data as unknown as Paiement
 }
 
-export const TYPE_PAIEMENT_LABELS: Record<TypePaiement, string> = {
-  mensualite: 'Mensualité',
-  inscription: "Frais d'inscription",
-  autre: 'Autre',
-}
+export const TYPES_PAIEMENT: TypePaiement[] = ['Mensualité', 'Inscription', 'Autre']
 
 export const MODE_PAIEMENT_LABELS: Record<ModePaiement, string> = {
   especes: 'Espèces',

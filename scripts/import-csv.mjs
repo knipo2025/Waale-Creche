@@ -165,9 +165,9 @@ const STATUT_ENFANT_CORRESPONDANCES = {
   Sorti: [],
 }
 const TYPE_PAIEMENT_CORRESPONDANCES = {
-  mensualite: ['Mensualité'],
-  inscription: ["Frais d'inscription", 'Inscription'],
-  autre: ['Autre'],
+  Mensualité: [],
+  Inscription: ["Frais d'inscription"],
+  Autre: [],
 }
 const MODE_PAIEMENT_CORRESPONDANCES = {
   especes: ['Espèces', 'Especes'],
@@ -322,12 +322,12 @@ function validerLignePaiement(ligne, index, crecheId, enfantsParCle) {
     )
   }
 
-  const type = normaliserEnum(ligne.type, TYPE_PAIEMENT_CORRESPONDANCES, 'mensualite')
+  const type = normaliserEnum(ligne.type, TYPE_PAIEMENT_CORRESPONDANCES, 'Mensualité')
   if (!type) erreurs.push(`type invalide : "${ligne.type}"`)
 
   const moisConcerne = normaliserMoisAnnee(ligne.mois_concerne)
   if (moisConcerne === undefined) erreurs.push(`mois_concerne invalide : "${ligne.mois_concerne}"`)
-  if (type === 'mensualite' && !moisConcerne) erreurs.push('mois_concerne requis pour une mensualité')
+  if (type === 'Mensualité' && !moisConcerne) erreurs.push('mois_concerne requis pour une mensualité')
 
   const montant = normaliserMontant(ligne.montant)
   if (montant === undefined || montant <= 0) erreurs.push(`montant invalide : "${ligne.montant}"`)

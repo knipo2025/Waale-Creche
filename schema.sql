@@ -236,7 +236,7 @@ create table if not exists public.paiements (
   creche_id uuid not null,
   enfant_id uuid not null references public.enfants (id) on delete cascade,
 
-  type text not null default 'mensualite' check (type in ('mensualite', 'inscription', 'autre')),
+  type text not null default 'Mensualité' check (type in ('Mensualité', 'Inscription', 'Autre')),
   mois_concerne text check (mois_concerne ~ '^\d{4}-\d{2}$'),
   montant integer not null,
   mode_paiement text not null default 'especes' check (
@@ -250,10 +250,25 @@ create table if not exists public.paiements (
 );
 
 -- Migration douce si la table existait déjà avec l'ancien schéma (sans ces colonnes) :
-alter table public.paiements add column if not exists type text not null default 'mensualite';
+alter table public.paiements add column if not exists type text not null default 'Mensualité';
 alter table public.paiements add column if not exists mois_concerne text;
 alter table public.paiements add column if not exists mode_paiement text not null default 'especes';
 alter table public.paiements add column if not exists numero_recu text;
+
+-- Contraintes check, redéfinies explicitement (drop + add, "add constraint
+-- if not exists" n'existe pas en Postgres) au cas où la table existait déjà
+-- avec des valeurs différentes. Valeurs alignées sur TypePaiement /
+-- StatutPaiement (src/types/paiement.ts, src/types/enfant.ts) et les
+-- <option value="..."> de src/pages/PaiementFormPage.tsx.
+alter table public.paiements drop constraint if exists paiements_type_check;
+alter table public.paiements add constraint paiements_type_check
+  check (type in ('Mensualité', 'Inscription', 'Autre'));
+alter table public.paiements drop constraint if exists paiements_statut_check;
+alter table public.paiements add constraint paiements_statut_check
+  check (statut in ('Reçu', 'En attente', 'Annulé'));
+alter table public.paiements drop constraint if exists paiements_mode_paiement_check;
+alter table public.paiements add constraint paiements_mode_paiement_check
+  check (mode_paiement in ('especes', 'mobile_money', 'virement', 'cheque'));
 
 create index if not exists paiements_creche_id_idx on public.paiements (creche_id);
 create index if not exists paiements_enfant_id_idx on public.paiements (enfant_id);
@@ -326,7 +341,7 @@ create table if not exists public.presences (
   enfant_id uuid not null references public.enfants (id) on delete cascade,
 
   date date not null default current_date,
-  statut text not null check (statut in ('present', 'absent', 'malade', 'conge')),
+  statut text not null check (statut in ('Présent', 'Absent', 'Malade', 'Congé')),
   heure_arrivee time,
   heure_depart time,
   repas boolean not null default false,
@@ -344,6 +359,22 @@ alter table public.presences add column if not exists heure_arrivee time;
 alter table public.presences add column if not exists heure_depart time;
 alter table public.presences add column if not exists repas boolean not null default false;
 alter table public.presences add column if not exists updated_at timestamptz not null default now();
+
+-- Contrainte check, redéfinie explicitement (voir remarque équivalente sur
+-- `paiements`). Valeurs alignées sur StatutPresence (src/types/presence.ts)
+-- et les boutons de src/components/PresenceRow.tsx.
+alter table public.presences drop constraint if exists presences_statut_check;
+alter table public.presences add constraint presences_statut_check
+  check (statut in ('Présent', 'Absent', 'Malade', 'Congé'));
+
+-- Contrainte unique, redéfinie explicitement pour la même raison : sans elle,
+-- upsertPresence() (src/lib/presences.ts, onConflict: 'enfant_id,date') échoue
+-- avec "no unique or exclusion constraint matching the ON CONFLICT specification".
+-- Si cette commande échoue avec une erreur de doublon, supprimez d'abord les
+-- présences en double pour un même (enfant_id, date) avant de la relancer.
+alter table public.presences drop constraint if exists presences_enfant_id_date_key;
+alter table public.presences add constraint presences_enfant_id_date_key
+  unique (enfant_id, date);
 
 create index if not exists presences_creche_id_idx on public.presences (creche_id);
 create index if not exists presences_date_idx on public.presences (date);

@@ -34,18 +34,13 @@ export async function upsertPresence(
   return data as unknown as Presence
 }
 
-export const STATUT_PRESENCE_LABELS: Record<StatutPresence, string> = {
-  present: 'Présent',
-  absent: 'Absent',
-  malade: 'Malade',
-  conge: 'Congé',
-}
+export const STATUTS_PRESENCE: StatutPresence[] = ['Présent', 'Absent', 'Malade', 'Congé']
 
 export const STATUT_PRESENCE_STYLES: Record<StatutPresence, string> = {
-  present: 'bg-succes-600 text-white border-succes-600',
-  absent: 'bg-critique-600 text-white border-critique-600',
-  malade: 'bg-attention-600 text-white border-attention-600',
-  conge: 'bg-pin-600 text-white border-pin-600',
+  Présent: 'bg-succes-600 text-white border-succes-600',
+  Absent: 'bg-critique-600 text-white border-critique-600',
+  Malade: 'bg-attention-600 text-white border-attention-600',
+  Congé: 'bg-pin-600 text-white border-pin-600',
 }
 
 export function heureActuelle(): string {

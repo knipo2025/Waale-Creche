@@ -1,12 +1,6 @@
-import {
-  heureActuelle,
-  STATUT_PRESENCE_LABELS,
-  STATUT_PRESENCE_STYLES,
-} from '../lib/presences'
+import { heureActuelle, STATUT_PRESENCE_STYLES, STATUTS_PRESENCE } from '../lib/presences'
 import type { Enfant } from '../types/enfant'
 import type { StatutPresence } from '../types/presence'
-
-const STATUTS: StatutPresence[] = ['present', 'absent', 'malade', 'conge']
 
 export interface PointageJour {
   statut: StatutPresence | null
@@ -42,7 +36,7 @@ export default function PresenceRow({
       </div>
 
       <div className="mt-3 grid grid-cols-4 gap-2">
-        {STATUTS.map((statut) => {
+        {STATUTS_PRESENCE.map((statut) => {
           const actif = pointage.statut === statut
           return (
             <button
@@ -55,13 +49,13 @@ export default function PresenceRow({
                   : 'border-brume bg-white text-ardoise active:bg-neutre-50'
               }`}
             >
-              {STATUT_PRESENCE_LABELS[statut]}
+              {statut}
             </button>
           )
         })}
       </div>
 
-      {pointage.statut === 'present' && (
+      {pointage.statut === 'Présent' && (
         <div className="mt-3 flex flex-col gap-3">
           <div className="grid grid-cols-2 gap-2">
             <label className="flex flex-col gap-1">

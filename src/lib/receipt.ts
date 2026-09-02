@@ -1,5 +1,5 @@
 import { formatDateFr, formatMoisAnnee } from './format'
-import { MODE_PAIEMENT_LABELS, TYPE_PAIEMENT_LABELS } from './paiements'
+import { MODE_PAIEMENT_LABELS } from './paiements'
 import { formatFCFA } from './tariffs'
 import type { Creche } from '../types/creche'
 import type { EnfantAvecPaiements } from '../types/enfant'
@@ -85,7 +85,7 @@ async function construireDocument(
 
   champ(
     'Motif',
-    `${TYPE_PAIEMENT_LABELS[paiement.type]}${
+    `${paiement.type}${
       paiement.mois_concerne ? ` — ${formatMoisAnnee(paiement.mois_concerne)}` : ''
     }`,
   )

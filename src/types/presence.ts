@@ -1,4 +1,4 @@
-export type StatutPresence = 'present' | 'absent' | 'malade' | 'conge'
+export type StatutPresence = 'Présent' | 'Absent' | 'Malade' | 'Congé'
 
 export interface Presence {
   id: string

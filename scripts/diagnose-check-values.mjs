@@ -41,6 +41,8 @@ if (!table || !colonne || candidats.length === 0) {
   process.exit(1)
 }
 
+const TABLES_NECESSITANT_ENFANT = new Set(['paiements', 'presences'])
+
 const BASE_PAYLOAD = {
   enfants: {
     nom: 'TEST_DIAGNOSTIC',
@@ -56,6 +58,17 @@ const BASE_PAYLOAD = {
     parent1_prenom: 'TestPrenom',
     parent1_telephone: '+225 00 00 00 00',
   },
+  paiements: {
+    montant: 60000,
+    mode_paiement: 'especes',
+    statut: 'Reçu',
+    date_paiement: '2025-09-02',
+  },
+  presences: {
+    date: '2000-01-01',
+    statut: 'Présent',
+    repas: false,
+  },
 }
 
 async function main() {
@@ -70,6 +83,19 @@ async function main() {
     .single()
 
   const base = { ...(BASE_PAYLOAD[table] ?? {}), creche_id: profile.creche_id }
+
+  if (TABLES_NECESSITANT_ENFANT.has(table)) {
+    const { data: enfants } = await supabase
+      .from('enfants')
+      .select('id')
+      .eq('creche_id', profile.creche_id)
+      .limit(1)
+    if (!enfants || enfants.length === 0) {
+      console.error("Aucun enfant trouvé pour cette crèche — nécessaire pour tester cette table.")
+      process.exit(1)
+    }
+    base.enfant_id = enfants[0].id
+  }
 
   const accepted = []
   for (const candidat of candidats) {

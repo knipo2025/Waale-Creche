@@ -59,7 +59,7 @@ Un paiement référence un enfant **par son nom**, pas par un identifiant techni
 |---|---|---|
 | `enfant_nom`, `enfant_prenom` | oui | doivent correspondre exactement à un enfant déjà dans Supabase (importé avant, ou via ce même lancement avec `--enfants`) |
 | `enfant_date_naissance` | requis seulement si deux enfants portent le même nom/prénom | `AAAA-MM-JJ` ou `JJ/MM/AAAA` |
-| `type` | non (défaut `Mensualité`) | `Mensualité`, `Frais d'inscription`, `Autre` |
+| `type` | non (défaut `Mensualité`) | `Mensualité`, `Inscription` (ou `Frais d'inscription`), `Autre` |
 | `mois_concerne` | oui si `type = Mensualité` | `AAAA-MM` ou `MM/AAAA` |
 | `montant` | oui | nombre entier (les espaces et « FCFA » sont tolérés, ex. `60 000 FCFA`) |
 | `mode_paiement` | non (défaut `Espèces`) | `Espèces`, `Mobile Money`, `Virement bancaire`, `Chèque` |

@@ -110,7 +110,7 @@ export default function DashboardPage() {
       .filter((p) => p.statut === 'Reçu' && p.date_paiement.startsWith(moisEnCours))
       .reduce((somme, p) => somme + p.montant, 0)
 
-    const presentsAujourdhui = presences.filter((p) => p.statut === 'present').length
+    const presentsAujourdhui = presences.filter((p) => p.statut === 'Présent').length
 
     const tauxRemplissage = creche ? (enfantsActifs.length / creche.capacite) * 100 : null
 

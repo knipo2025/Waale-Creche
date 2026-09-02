@@ -7,11 +7,7 @@ import { PleinEcranLoading } from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
 import { listEnfants } from '../lib/enfants'
 import { moisCourant, todayIso } from '../lib/format'
-import {
-  createPaiement,
-  MODE_PAIEMENT_LABELS,
-  TYPE_PAIEMENT_LABELS,
-} from '../lib/paiements'
+import { createPaiement, MODE_PAIEMENT_LABELS, TYPES_PAIEMENT } from '../lib/paiements'
 import {
   calculerAgeEnMois,
   calculerGroupe,
@@ -40,8 +36,8 @@ function tarifSuggere(
   type: TypePaiement,
 ): number | null {
   if (!enfant) return null
-  if (type === 'inscription') return FRAIS_INSCRIPTION
-  if (type === 'mensualite') {
+  if (type === 'Inscription') return FRAIS_INSCRIPTION
+  if (type === 'Mensualité') {
     const groupe = calculerGroupe(calculerAgeEnMois(enfant.date_naissance))
     return calculerTarifMensuel(
       groupe,
@@ -63,7 +59,7 @@ export default function PaiementFormPage() {
   const [submitting, setSubmitting] = useState(false)
 
   const [enfantId, setEnfantId] = useState('')
-  const [type, setType] = useState<TypePaiement>('mensualite')
+  const [type, setType] = useState<TypePaiement>('Mensualité')
   const [moisConcerne, setMoisConcerne] = useState(moisCourant())
   const [montant, setMontant] = useState('')
   const [montantModifie, setMontantModifie] = useState(false)
@@ -80,7 +76,7 @@ export default function PaiementFormPage() {
         setEnfants(data)
         if (data.length > 0) {
           setEnfantId(data[0].id)
-          const s = tarifSuggere(data[0], 'mensualite')
+          const s = tarifSuggere(data[0], 'Mensualité')
           if (s !== null) setMontant(String(s))
         }
         setError(null)
@@ -138,7 +134,7 @@ export default function PaiementFormPage() {
     const payload: PaiementFormValues = {
       enfant_id: enfantId,
       type,
-      mois_concerne: type === 'mensualite' ? moisConcerne : null,
+      mois_concerne: type === 'Mensualité' ? moisConcerne : null,
       montant: Math.round(montantNombre),
       mode_paiement: modePaiement,
       statut,
@@ -214,15 +210,15 @@ export default function PaiementFormPage() {
               value={type}
               onChange={(e) => handleTypeChange(e.target.value as TypePaiement)}
             >
-              {Object.entries(TYPE_PAIEMENT_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
+              {TYPES_PAIEMENT.map((valeur) => (
+                <option key={valeur} value={valeur}>
+                  {valeur}
                 </option>
               ))}
             </select>
           </Champ>
 
-          {type === 'mensualite' && (
+          {type === 'Mensualité' && (
             <Champ label="Mois concerné">
               <input
                 required

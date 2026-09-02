@@ -1,6 +1,6 @@
 import type { StatutPaiement } from './enfant'
 
-export type TypePaiement = 'mensualite' | 'inscription' | 'autre'
+export type TypePaiement = 'Mensualité' | 'Inscription' | 'Autre'
 
 export type ModePaiement = 'especes' | 'mobile_money' | 'virement' | 'cheque'
 

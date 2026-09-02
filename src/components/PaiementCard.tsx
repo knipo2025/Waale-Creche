@@ -2,11 +2,7 @@ import { Receipt } from 'lucide-react'
 import { useState } from 'react'
 import { totalPaiementsRecus } from '../lib/enfants'
 import { formatDateFr, formatMoisAnnee } from '../lib/format'
-import {
-  MODE_PAIEMENT_LABELS,
-  STATUT_PAIEMENT_STYLES,
-  TYPE_PAIEMENT_LABELS,
-} from '../lib/paiements'
+import { MODE_PAIEMENT_LABELS, STATUT_PAIEMENT_STYLES } from '../lib/paiements'
 import { partagerOuTelechargerRecu } from '../lib/receipt'
 import {
   calculerAgeEnMois,
@@ -72,7 +68,7 @@ export default function PaiementCard({
               : 'Enfant supprimé'}
           </p>
           <p className="text-sm text-ardoise">
-            {TYPE_PAIEMENT_LABELS[paiement.type]}
+            {paiement.type}
             {paiement.mois_concerne ? ` · ${formatMoisAnnee(paiement.mois_concerne)}` : ''}
           </p>
         </div>
