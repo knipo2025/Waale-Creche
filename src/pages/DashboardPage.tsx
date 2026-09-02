@@ -1,0 +1,266 @@
+import {
+  AlertTriangle,
+  Building2,
+  CalendarCheck,
+  CheckCircle2,
+  ChevronRight,
+  CircleDollarSign,
+  Users,
+  Wallet,
+} from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import AppLayout from '../components/AppLayout'
+import StatCard from '../components/StatCard'
+import { useAuth } from '../contexts/AuthContext'
+import { listEnfants, totalPaiementsRecus } from '../lib/enfants'
+import { moisCourant, todayIso } from '../lib/format'
+import { listPaiements } from '../lib/paiements'
+import { listPresencesDuJour } from '../lib/presences'
+import {
+  calculerAgeEnMois,
+  calculerGroupe,
+  calculerSoldeImpaye,
+  calculerTarifMensuel,
+  formatFCFA,
+} from '../lib/tariffs'
+import type { EnfantAvecPaiements } from '../types/enfant'
+import type { PaiementAvecEnfant } from '../types/paiement'
+import type { Presence } from '../types/presence'
+
+export default function DashboardPage() {
+  const { profile, creche, profileError } = useAuth()
+
+  const [enfants, setEnfants] = useState<EnfantAvecPaiements[]>([])
+  const [paiements, setPaiements] = useState<PaiementAvecEnfant[]>([])
+  const [presences, setPresences] = useState<Presence[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!profile?.creche_id) return
+    let isMounted = true
+    setLoading(true)
+
+    Promise.all([
+      listEnfants(profile.creche_id),
+      listPaiements(profile.creche_id),
+      listPresencesDuJour(profile.creche_id, todayIso()),
+    ])
+      .then(([enfantsData, paiementsData, presencesData]) => {
+        if (!isMounted) return
+        setEnfants(enfantsData)
+        setPaiements(paiementsData)
+        setPresences(presencesData)
+        setError(null)
+      })
+      .catch((err: unknown) => {
+        if (isMounted) {
+          setError(
+            err instanceof Error
+              ? err.message
+              : 'Impossible de charger le tableau de bord.',
+          )
+        }
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false)
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [profile?.creche_id])
+
+  const stats = useMemo(() => {
+    const enfantsActifs = enfants.filter((e) => e.statut === 'actif')
+
+    const soldesParEnfant = enfants.map((enfant) => {
+      const groupe = calculerGroupe(calculerAgeEnMois(enfant.date_naissance))
+      const tarifMensuel = calculerTarifMensuel(
+        groupe,
+        enfant.service,
+        enfant.option_repas,
+        enfant.option_garderie,
+      )
+      const solde = calculerSoldeImpaye(
+        enfant.date_inscription,
+        tarifMensuel,
+        totalPaiementsRecus(enfant.paiements),
+      )
+      return { enfant, tarifMensuel, solde }
+    })
+
+    const totalImpayes = soldesParEnfant.reduce(
+      (somme, s) => somme + Math.max(s.solde, 0),
+      0,
+    )
+
+    const chiffreAffairesAttendu = soldesParEnfant
+      .filter((s) => s.enfant.statut === 'actif')
+      .reduce((somme, s) => somme + s.tarifMensuel, 0)
+
+    const tauxImpayes =
+      chiffreAffairesAttendu > 0 ? (totalImpayes / chiffreAffairesAttendu) * 100 : 0
+
+    const moisEnCours = moisCourant()
+    const montantEncaisseCeMois = paiements
+      .filter((p) => p.statut === 'Reçu' && p.date_paiement.startsWith(moisEnCours))
+      .reduce((somme, p) => somme + p.montant, 0)
+
+    const presentsAujourdhui = presences.filter((p) => p.statut === 'present').length
+
+    const tauxRemplissage = creche ? (enfantsActifs.length / creche.capacite) * 100 : null
+
+    const alertesImpayesEnfants = creche
+      ? soldesParEnfant
+          .filter((s) => s.solde > creche.seuil_impaye_enfant)
+          .sort((a, b) => b.solde - a.solde)
+      : []
+
+    const alerteRemplissage =
+      creche && tauxRemplissage !== null && tauxRemplissage < creche.objectif_remplissage
+
+    const alerteImpayesGlobale = creche ? tauxImpayes > creche.seuil_impaye_taux : false
+
+    return {
+      enfantsActifsCount: enfantsActifs.length,
+      totalImpayes,
+      tauxImpayes,
+      montantEncaisseCeMois,
+      presentsAujourdhui,
+      tauxRemplissage,
+      alertesImpayesEnfants,
+      alerteRemplissage,
+      alerteImpayesGlobale,
+    }
+  }, [enfants, paiements, presences, creche])
+
+  const aucuneAlerte =
+    stats.alertesImpayesEnfants.length === 0 &&
+    !stats.alerteRemplissage &&
+    !stats.alerteImpayesGlobale
+
+  return (
+    <AppLayout title="Tableau de bord">
+      {(profileError || error) && (
+        <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          {profileError ?? error}
+        </p>
+      )}
+
+      {loading ? (
+        <p className="text-center text-slate-500">Chargement…</p>
+      ) : (
+        <div className="flex flex-col gap-4">
+          <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <div className="flex items-center gap-2 text-slate-400">
+              <Building2 size={16} />
+              <p className="text-xs font-medium uppercase tracking-wide">
+                Taux de remplissage
+              </p>
+            </div>
+            {creche ? (
+              <>
+                <p className="mt-2 text-2xl font-bold text-slate-900">
+                  {stats.tauxRemplissage?.toFixed(0)} %
+                </p>
+                <p className="text-xs text-slate-500">
+                  {stats.enfantsActifsCount} / {creche.capacite} places occupées
+                </p>
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className={`h-full rounded-full ${
+                      stats.alerteRemplissage ? 'bg-amber-500' : 'bg-emerald-600'
+                    }`}
+                    style={{
+                      width: `${Math.min(100, stats.tauxRemplissage ?? 0)}%`,
+                    }}
+                  />
+                </div>
+              </>
+            ) : (
+              <p className="mt-2 text-sm text-slate-500">
+                Capacité non configurée — voir Paramètres.
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <StatCard
+              icon={Users}
+              label="Enfants inscrits"
+              valeur={String(stats.enfantsActifsCount)}
+            />
+            <StatCard
+              icon={CalendarCheck}
+              label="Présents du jour"
+              valeur={`${stats.presentsAujourdhui} / ${stats.enfantsActifsCount}`}
+            />
+            <StatCard
+              icon={Wallet}
+              label="Encaissé ce mois"
+              valeur={formatFCFA(stats.montantEncaisseCeMois)}
+            />
+            <StatCard
+              icon={CircleDollarSign}
+              label="Total impayés"
+              valeur={formatFCFA(stats.totalImpayes)}
+            />
+          </div>
+
+          <section className="rounded-xl border border-slate-200 bg-white p-4">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
+              Alertes
+            </h2>
+
+            {aucuneAlerte ? (
+              <div className="flex items-center gap-2 text-emerald-700">
+                <CheckCircle2 size={18} />
+                <p className="text-sm">Aucune alerte — tout va bien.</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {stats.alerteRemplissage && creche && (
+                  <div className="flex items-start gap-2 rounded-lg bg-amber-50 p-3">
+                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600" />
+                    <p className="text-sm text-amber-800">
+                      Taux de remplissage ({stats.tauxRemplissage?.toFixed(0)} %) sous
+                      l'objectif de {creche.objectif_remplissage} %.
+                    </p>
+                  </div>
+                )}
+
+                {stats.alerteImpayesGlobale && creche && (
+                  <div className="flex items-start gap-2 rounded-lg bg-amber-50 p-3">
+                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-amber-600" />
+                    <p className="text-sm text-amber-800">
+                      Impayés à {stats.tauxImpayes.toFixed(0)} % du chiffre d'affaires
+                      mensuel attendu (seuil : {creche.seuil_impaye_taux} %).
+                    </p>
+                  </div>
+                )}
+
+                {stats.alertesImpayesEnfants.map(({ enfant, solde }) => (
+                  <Link
+                    key={enfant.id}
+                    to={`/enfants/${enfant.id}`}
+                    className="flex items-center justify-between gap-2 rounded-lg bg-red-50 p-3 transition active:bg-red-100"
+                  >
+                    <div className="flex items-start gap-2">
+                      <AlertTriangle size={18} className="mt-0.5 shrink-0 text-red-600" />
+                      <p className="text-sm text-red-800">
+                        {enfant.prenom} {enfant.nom} — solde {formatFCFA(solde)}
+                      </p>
+                    </div>
+                    <ChevronRight size={18} className="shrink-0 text-red-300" />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+      )}
+    </AppLayout>
+  )
+}
