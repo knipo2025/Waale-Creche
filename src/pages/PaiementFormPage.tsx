@@ -1,13 +1,20 @@
 import { ArrowLeft, Users } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import Banner from '../components/Banner'
 import EmptyState from '../components/EmptyState'
+import { Champ, inputClass } from '../components/FormField'
 import { PleinEcranLoading } from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
 import { listEnfants } from '../lib/enfants'
 import { moisCourant, todayIso } from '../lib/format'
-import { createPaiement, MODE_PAIEMENT_LABELS, TYPES_PAIEMENT } from '../lib/paiements'
+import {
+  createPaiement,
+  getPaiement,
+  MODE_PAIEMENT_LABELS,
+  TYPES_PAIEMENT,
+  updatePaiement,
+} from '../lib/paiements'
 import {
   calculerAgeEnMois,
   calculerGroupe,
@@ -17,19 +24,6 @@ import {
 } from '../lib/tariffs'
 import type { EnfantAvecPaiements, StatutPaiement } from '../types/enfant'
 import type { ModePaiement, PaiementFormValues, TypePaiement } from '../types/paiement'
-
-const inputClass =
-  'h-14 w-full rounded-xl border border-brume bg-white px-4 text-base text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100'
-const labelClass = 'text-sm font-medium text-ardoise'
-
-function Champ({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="flex flex-col gap-1">
-      <span className={labelClass}>{label}</span>
-      {children}
-    </label>
-  )
-}
 
 function tarifSuggere(
   enfant: EnfantAvecPaiements | undefined,
@@ -50,11 +44,14 @@ function tarifSuggere(
 }
 
 export default function PaiementFormPage() {
+  const { id } = useParams<{ id: string }>()
+  const isEdition = Boolean(id)
   const { profile } = useAuth()
   const navigate = useNavigate()
 
   const [enfants, setEnfants] = useState<EnfantAvecPaiements[]>([])
   const [loadingEnfants, setLoadingEnfants] = useState(true)
+  const [loadingPaiement, setLoadingPaiement] = useState(isEdition)
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
@@ -74,7 +71,7 @@ export default function PaiementFormPage() {
       .then((data) => {
         if (!isMounted) return
         setEnfants(data)
-        if (data.length > 0) {
+        if (!isEdition && data.length > 0) {
           setEnfantId(data[0].id)
           const s = tarifSuggere(data[0], 'Mensualité')
           if (s !== null) setMontant(String(s))
@@ -94,7 +91,37 @@ export default function PaiementFormPage() {
     return () => {
       isMounted = false
     }
-  }, [profile?.creche_id])
+  }, [profile?.creche_id, isEdition])
+
+  useEffect(() => {
+    if (!id) return
+    let isMounted = true
+    getPaiement(id)
+      .then((paiement) => {
+        if (!isMounted) return
+        setEnfantId(paiement.enfant_id)
+        setType(paiement.type)
+        setMoisConcerne(paiement.mois_concerne ?? moisCourant())
+        setMontant(String(paiement.montant))
+        setMontantModifie(true)
+        setModePaiement(paiement.mode_paiement)
+        setStatut(paiement.statut)
+        setDatePaiement(paiement.date_paiement)
+      })
+      .catch((err: unknown) => {
+        if (isMounted) {
+          setError(
+            err instanceof Error ? err.message : 'Impossible de charger le paiement.',
+          )
+        }
+      })
+      .finally(() => {
+        if (isMounted) setLoadingPaiement(false)
+      })
+    return () => {
+      isMounted = false
+    }
+  }, [id])
 
   const enfantSelectionne = enfants.find((e) => e.id === enfantId)
   const suggestion = tarifSuggere(enfantSelectionne, type)
@@ -142,8 +169,13 @@ export default function PaiementFormPage() {
     }
 
     try {
-      const paiement = await createPaiement(payload, profile.creche_id)
-      navigate('/paiements', { state: { recuGenere: paiement.numero_recu } })
+      if (isEdition && id) {
+        await updatePaiement(id, payload)
+        navigate('/paiements', { state: { succes: 'Paiement modifié avec succès.' } })
+      } else {
+        const paiement = await createPaiement(payload, profile.creche_id)
+        navigate('/paiements', { state: { recuGenere: paiement.numero_recu } })
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Impossible d'enregistrer le paiement.",
@@ -152,7 +184,7 @@ export default function PaiementFormPage() {
     }
   }
 
-  if (loadingEnfants) {
+  if (loadingEnfants || loadingPaiement) {
     return <PleinEcranLoading />
   }
 
@@ -166,7 +198,9 @@ export default function PaiementFormPage() {
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="font-display text-lg font-bold text-encre">Nouveau paiement</h1>
+        <h1 className="font-display text-lg font-bold text-encre">
+          {isEdition ? 'Modifier le paiement' : 'Nouveau paiement'}
+        </h1>
       </header>
 
       {enfants.length === 0 ? (
@@ -293,7 +327,11 @@ export default function PaiementFormPage() {
             disabled={submitting}
             className="h-14 rounded-xl bg-pin-600 text-lg font-semibold text-white transition active:bg-pin-700 disabled:opacity-60"
           >
-            {submitting ? 'Enregistrement…' : 'Enregistrer le paiement'}
+            {submitting
+              ? 'Enregistrement…'
+              : isEdition
+                ? 'Enregistrer les modifications'
+                : 'Enregistrer le paiement'}
           </button>
         </form>
       )}

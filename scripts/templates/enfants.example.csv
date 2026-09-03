@@ -1,3 +1,3 @@
-nom,prenom,date_naissance,sexe,service,option_repas,option_garderie,statut,date_inscription,allergies,medecin_nom,medecin_telephone,parent1_nom,parent1_prenom,parent1_telephone,parent1_email,parent1_adresse,parent2_nom,parent2_prenom,parent2_telephone,parent2_email,parent2_adresse
-Koné,Awa,2025-03-12,F,Journée complète,oui,non,Inscrit,2025-09-01,Arachides,Dr Diallo,+225 07 00 00 00,Koné,Moussa,+225 07 12 34 56,moussa.kone@exemple.com,"Cocody, Abidjan",Koné,Fatou,+225 05 98 76 54,,
+nom,prenom,date_naissance,sexe,service,option_repas,option_garderie,statut,date_inscription,date_sortie,allergies,medecin_nom,medecin_telephone,parent1_nom,parent1_prenom,parent1_telephone,parent1_email,parent1_adresse,parent2_nom,parent2_prenom,parent2_telephone,parent2_email,parent2_adresse
+Koné,Awa,2025-03-12,F,Journée complète,oui,non,Inscrit,2025-09-01,,Arachides,Dr Diallo,+225 07 00 00 00,Koné,Moussa,+225 07 12 34 56,moussa.kone@exemple.com,"Cocody, Abidjan",Koné,Fatou,+225 05 98 76 54,,
 Traoré,Ibrahim,2024-11-05,M,Demi-journée matin,non,oui,Inscrit,2025-09-01,,,,Traoré,Salif,+225 01 23 45 67,,,,,,,

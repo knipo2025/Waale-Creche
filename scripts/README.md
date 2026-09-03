@@ -44,6 +44,7 @@ données d'exemple par les vôtres, sans changer les noms de colonnes.
 | `option_repas`, `option_garderie` | oui | `oui` / `non` |
 | `statut` | non (défaut `Inscrit`) | `Inscrit`, `En attente`, `Sorti` |
 | `date_inscription` | non (défaut : aujourd'hui) | `AAAA-MM-JJ` ou `JJ/MM/AAAA` |
+| `date_sortie` | requis si `statut = Sorti` | `AAAA-MM-JJ` ou `JJ/MM/AAAA` |
 | `allergies`, `medecin_nom`, `medecin_telephone` | non | texte libre |
 | `parent1_nom`, `parent1_prenom`, `parent1_telephone` | oui | texte |
 | `parent1_email`, `parent1_adresse` | non | texte libre |

@@ -26,6 +26,7 @@ export interface Enfant {
 
   statut: Statut
   date_inscription: string
+  date_sortie: string | null
 
   allergies: string | null
   medecin_nom: string | null

@@ -2,6 +2,7 @@ import { ArrowLeft } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import Banner from '../components/Banner'
+import { Champ, inputClass, labelClass, Section } from '../components/FormField'
 import { PleinEcranLoading } from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
 import { createEnfant, getEnfant, updateEnfant } from '../lib/enfants'
@@ -26,6 +27,7 @@ function valeursVides(): EnfantFormValues {
     option_garderie: false,
     statut: 'Inscrit',
     date_inscription: todayIso(),
+    date_sortie: null,
     allergies: '',
     medecin_nom: '',
     medecin_telephone: '',
@@ -45,36 +47,6 @@ function valeursVides(): EnfantFormValues {
 function videVersNull(valeur: string): string | null {
   const t = valeur.trim()
   return t === '' ? null : t
-}
-
-const inputClass =
-  'h-14 w-full rounded-xl border border-brume bg-white px-4 text-base text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100'
-const labelClass = 'text-sm font-medium text-ardoise'
-
-function Champ({
-  label,
-  children,
-}: {
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <label className="flex flex-col gap-1">
-      <span className={labelClass}>{label}</span>
-      {children}
-    </label>
-  )
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="rounded-card border border-brume bg-white p-4">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ardoise">
-        {title}
-      </h2>
-      <div className="flex flex-col gap-4">{children}</div>
-    </section>
-  )
 }
 
 export default function EnfantFormPage() {
@@ -131,6 +103,14 @@ export default function EnfantFormPage() {
     setValeurs((precedent) => ({ ...precedent, [champ]: valeur }))
   }
 
+  function handleStatutChange(statut: Statut) {
+    setValeurs((precedent) => ({
+      ...precedent,
+      statut,
+      date_sortie: statut === 'Sorti' ? (precedent.date_sortie ?? todayIso()) : null,
+    }))
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!profile?.creche_id) return
@@ -139,6 +119,7 @@ export default function EnfantFormPage() {
 
     const payload: EnfantFormValues = {
       ...valeurs,
+      date_sortie: valeurs.statut === 'Sorti' ? valeurs.date_sortie : null,
       allergies: videVersNull(valeurs.allergies ?? ''),
       medecin_nom: videVersNull(valeurs.medecin_nom ?? ''),
       medecin_telephone: videVersNull(valeurs.medecin_telephone ?? ''),
@@ -298,13 +279,26 @@ export default function EnfantFormPage() {
             <select
               className={inputClass}
               value={valeurs.statut}
-              onChange={(e) => setChamp('statut', e.target.value as Statut)}
+              onChange={(e) => handleStatutChange(e.target.value as Statut)}
             >
               <option value="Inscrit">Inscrit</option>
               <option value="En attente">En attente</option>
               <option value="Sorti">Sorti</option>
             </select>
           </Champ>
+
+          {valeurs.statut === 'Sorti' && (
+            <Champ label="Date de sortie">
+              <input
+                required
+                type="date"
+                max={todayIso()}
+                className={inputClass}
+                value={valeurs.date_sortie ?? ''}
+                onChange={(e) => setChamp('date_sortie', e.target.value)}
+              />
+            </Champ>
+          )}
 
           <Champ label="Date d'inscription">
             <input

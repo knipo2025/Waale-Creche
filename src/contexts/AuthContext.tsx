@@ -20,6 +20,7 @@ interface AuthContextValue {
   signIn: (email: string, password: string) => Promise<{ error: string | null }>
   signOut: () => Promise<void>
   refreshCreche: () => Promise<void>
+  resetPassword: (email: string) => Promise<{ error: string | null }>
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
@@ -60,50 +61,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let isMounted = true
+    // Incrémenté à chaque changement de session ; une requête de profil en
+    // vol dont l'id ne correspond plus à la dernière requête est ignorée à
+    // sa résolution (évite qu'une réponse tardive n'écrase un état plus
+    // récent, par ex. après une déconnexion pendant que le profil chargeait).
+    let derniereRequeteId = 0
 
-    async function loadProfileFor(userId: string) {
+    async function loadProfileFor(userId: string, requeteId: number) {
       try {
         const nextProfile = await fetchProfile(userId)
-        if (isMounted) {
-          setProfile(nextProfile)
-          setProfileError(null)
-        }
+        if (!isMounted || requeteId !== derniereRequeteId) return
+        setProfile(nextProfile)
+        setProfileError(null)
+
         const nextCreche = await fetchCreche(nextProfile.creche_id)
-        if (isMounted) setCreche(nextCreche)
+        if (!isMounted || requeteId !== derniereRequeteId) return
+        setCreche(nextCreche)
       } catch (error) {
-        if (isMounted) {
-          setProfile(null)
-          setCreche(null)
-          setProfileError(
-            error instanceof Error
-              ? error.message
-              : 'Impossible de charger le profil.',
-          )
-        }
+        if (!isMounted || requeteId !== derniereRequeteId) return
+        setProfile(null)
+        setCreche(null)
+        setProfileError(
+          error instanceof Error
+            ? error.message
+            : 'Impossible de charger le profil.',
+        )
       }
     }
 
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!isMounted) return
-      setSession(data.session)
-      if (data.session?.user) {
-        await loadProfileFor(data.session.user.id)
-      }
-      if (isMounted) setLoading(false)
-    })
-
+    // onAuthStateChange émet immédiatement l'état courant à l'abonnement
+    // (événement INITIAL_SESSION) : pas besoin d'un getSession() séparé au
+    // montage, qui ne ferait que déclencher un double chargement du profil.
     const { data: subscription } = supabase.auth.onAuthStateChange(
       async (_event, nextSession) => {
         if (!isMounted) return
         setSession(nextSession)
+        derniereRequeteId += 1
+        const requeteId = derniereRequeteId
+
         if (nextSession?.user) {
-          await loadProfileFor(nextSession.user.id)
+          await loadProfileFor(nextSession.user.id, requeteId)
         } else {
           setProfile(null)
           setCreche(null)
           setProfileError(null)
         }
-        setLoading(false)
+        if (isMounted) setLoading(false)
       },
     )
 
@@ -134,6 +137,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setCreche(nextCreche)
   }
 
+  async function resetPassword(email: string) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reinitialiser-mot-de-passe`,
+    })
+    if (error) {
+      return { error: error.message }
+    }
+    return { error: null }
+  }
+
   const value: AuthContextValue = {
     session,
     user: session?.user ?? null,
@@ -144,6 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signIn,
     signOut,
     refreshCreche,
+    resetPassword,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -11,6 +11,7 @@ import {
   calculerGroupe,
   calculerSoldeImpaye,
   calculerTarifMensuel,
+  dateFinCalculSolde,
   formatFCFA,
   SERVICE_LABELS,
 } from '../lib/tariffs'
@@ -120,7 +121,12 @@ export default function EnfantDetailPage() {
     enfant.option_repas,
     enfant.option_garderie,
   )
-  const solde = calculerSoldeImpaye(enfant.date_inscription, tarifMensuel, totalRecu)
+  const solde = calculerSoldeImpaye(
+    enfant.date_inscription,
+    tarifMensuel,
+    totalRecu,
+    dateFinCalculSolde(enfant),
+  )
 
   async function handleSupprimer() {
     if (!enfant) return
@@ -226,6 +232,7 @@ export default function EnfantDetailPage() {
           <Champ label="Date de naissance" value={enfant.date_naissance} />
           <Champ label="Sexe" value={enfant.sexe === 'M' ? 'Masculin' : 'Féminin'} />
           <Champ label="Date d'inscription" value={enfant.date_inscription} />
+          <Champ label="Date de sortie" value={enfant.date_sortie} />
           <Champ label="Allergies" value={enfant.allergies} />
         </Section>
 

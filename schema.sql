@@ -110,6 +110,7 @@ create table if not exists public.enfants (
 
   statut text not null default 'Inscrit' check (statut in ('Inscrit', 'En attente', 'Sorti')),
   date_inscription date not null default current_date,
+  date_sortie date,
 
   allergies text,
   medecin_nom text,
@@ -143,6 +144,7 @@ alter table public.enfants add column if not exists option_repas boolean not nul
 alter table public.enfants add column if not exists option_garderie boolean not null default false;
 alter table public.enfants add column if not exists statut text not null default 'Inscrit';
 alter table public.enfants add column if not exists date_inscription date not null default current_date;
+alter table public.enfants add column if not exists date_sortie date;
 alter table public.enfants add column if not exists allergies text;
 alter table public.enfants add column if not exists medecin_nom text;
 alter table public.enfants add column if not exists medecin_telephone text;

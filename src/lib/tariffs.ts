@@ -1,4 +1,4 @@
-import type { Groupe, Service } from '../types/enfant'
+import type { Groupe, Service, Statut } from '../types/enfant'
 
 export const FRAIS_INSCRIPTION = 25_000
 
@@ -75,6 +75,21 @@ export function calculerSoldeImpaye(
 ): number {
   const moisEcoules = monthsBetween(new Date(dateInscription), aujourdhui)
   return moisEcoules * tarifMensuel + FRAIS_INSCRIPTION - totalPaiementsRecus
+}
+
+/**
+ * Date jusqu'à laquelle compter les mois dus : la date du jour normalement,
+ * mais figée à la date de sortie pour un enfant "Sorti" — sans ça, le solde
+ * d'un enfant parti continuerait de grossir indéfiniment après son départ.
+ */
+export function dateFinCalculSolde(enfant: {
+  statut: Statut
+  date_sortie: string | null
+}): Date {
+  if (enfant.statut === 'Sorti' && enfant.date_sortie) {
+    return new Date(enfant.date_sortie)
+  }
+  return new Date()
 }
 
 export function formatFCFA(montant: number): string {

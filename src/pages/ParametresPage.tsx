@@ -3,33 +3,10 @@ import { type FormEvent, useEffect, useState } from 'react'
 import AppLayout from '../components/AppLayout'
 import Banner from '../components/Banner'
 import EmptyState from '../components/EmptyState'
+import { Champ, inputClass, Section } from '../components/FormField'
 import { useAuth } from '../contexts/AuthContext'
 import { updateCreche } from '../lib/creches'
 import type { CrecheFormValues } from '../types/creche'
-
-const inputClass =
-  'h-14 w-full rounded-xl border border-brume bg-white px-4 text-base text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100'
-const labelClass = 'text-sm font-medium text-ardoise'
-
-function Champ({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="flex flex-col gap-1">
-      <span className={labelClass}>{label}</span>
-      {children}
-    </label>
-  )
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section className="rounded-card border border-brume bg-white p-4">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ardoise">
-        {title}
-      </h2>
-      <div className="flex flex-col gap-4">{children}</div>
-    </section>
-  )
-}
 
 function valeursDepuisCreche(creche: {
   nom: string

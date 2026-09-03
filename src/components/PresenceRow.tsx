@@ -1,3 +1,4 @@
+import { X } from 'lucide-react'
 import Avatar from './Avatar'
 import { heureActuelle, STATUT_PRESENCE_STYLES, STATUTS_PRESENCE } from '../lib/presences'
 import type { Enfant } from '../types/enfant'
@@ -18,6 +19,7 @@ export default function PresenceRow({
   onChangeStatut,
   onChangeHeure,
   onChangeRepas,
+  onAnnuler,
 }: {
   enfant: Pick<Enfant, 'id' | 'nom' | 'prenom'>
   pointage: PointageJour
@@ -26,6 +28,7 @@ export default function PresenceRow({
   onChangeStatut: (statut: StatutPresence) => void
   onChangeHeure: (champ: 'heure_arrivee' | 'heure_depart', valeur: string) => void
   onChangeRepas: (repas: boolean) => void
+  onAnnuler: () => void
 }) {
   return (
     <li className="rounded-card border border-brume bg-white p-4">
@@ -36,7 +39,19 @@ export default function PresenceRow({
             {enfant.prenom} {enfant.nom}
           </p>
         </div>
-        {saving && <span className="shrink-0 text-xs text-ardoise">Enregistrement…</span>}
+        <div className="flex shrink-0 items-center gap-2">
+          {saving && <span className="text-xs text-ardoise">Enregistrement…</span>}
+          {pointage.statut && !saving && (
+            <button
+              type="button"
+              onClick={onAnnuler}
+              aria-label="Annuler le pointage"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-ardoise transition active:bg-neutre-50"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="mt-3 grid grid-cols-4 gap-2">

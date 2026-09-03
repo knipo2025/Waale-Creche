@@ -8,14 +8,30 @@ import PresenceRow, { type PointageJour } from '../components/PresenceRow'
 import { useAuth } from '../contexts/AuthContext'
 import { listEnfants } from '../lib/enfants'
 import { todayIso } from '../lib/format'
-import { heureActuelle, listPresencesDuJour, upsertPresence } from '../lib/presences'
+import {
+  deletePresence,
+  heureActuelle,
+  listPresencesDuJour,
+  upsertPresence,
+} from '../lib/presences'
 import type { EnfantAvecPaiements } from '../types/enfant'
 import type { Presence, PresenceFormValues, StatutPresence } from '../types/presence'
 
-const dateDuJour = todayIso()
-
 export default function PresencesPage() {
   const { profile } = useAuth()
+
+  // Recalculé (pas figé au chargement du bundle) et re-vérifié périodiquement :
+  // sur une tablette laissée ouverte toute la journée, sans ça les pointages
+  // passés minuit s'enregistreraient silencieusement sur la veille.
+  const [dateDuJour, setDateDuJour] = useState(todayIso())
+
+  useEffect(() => {
+    const intervalle = setInterval(() => {
+      const aujourdhui = todayIso()
+      setDateDuJour((precedent) => (precedent === aujourdhui ? precedent : aujourdhui))
+    }, 60_000)
+    return () => clearInterval(intervalle)
+  }, [])
 
   const [enfants, setEnfants] = useState<EnfantAvecPaiements[]>([])
   const [presences, setPresences] = useState<Record<string, Presence>>({})
@@ -57,7 +73,7 @@ export default function PresencesPage() {
     return () => {
       isMounted = false
     }
-  }, [profile?.creche_id])
+  }, [profile?.creche_id, dateDuJour])
 
   const enfantsActifs = useMemo(
     () => enfants.filter((e) => e.statut === 'Inscrit'),
@@ -67,10 +83,11 @@ export default function PresencesPage() {
   async function enregistrer(enfantId: string, partiel: Partial<PresenceFormValues>) {
     if (!profile?.creche_id) return
     const existant = presences[enfantId]
+    const dateActuelle = todayIso()
 
     const valeurs: PresenceFormValues = {
       enfant_id: enfantId,
-      date: dateDuJour,
+      date: dateActuelle,
       statut: existant?.statut ?? 'Présent',
       heure_arrivee: existant?.heure_arrivee ?? null,
       heure_depart: existant?.heure_depart ?? null,
@@ -80,6 +97,7 @@ export default function PresencesPage() {
 
     setSavingIds((precedent) => new Set(precedent).add(enfantId))
     setRowErrors((precedent) => ({ ...precedent, [enfantId]: null }))
+    if (dateActuelle !== dateDuJour) setDateDuJour(dateActuelle)
 
     try {
       const resultat = await upsertPresence(valeurs, profile.creche_id)
@@ -115,6 +133,32 @@ export default function PresencesPage() {
 
   function handleChangeRepas(enfantId: string, repas: boolean) {
     void enregistrer(enfantId, { repas })
+  }
+
+  async function handleAnnuler(enfantId: string) {
+    const existant = presences[enfantId]
+    if (!existant) return
+    setSavingIds((precedent) => new Set(precedent).add(enfantId))
+    setRowErrors((precedent) => ({ ...precedent, [enfantId]: null }))
+    try {
+      await deletePresence(existant.id)
+      setPresences((precedent) => {
+        const suivant = { ...precedent }
+        delete suivant[enfantId]
+        return suivant
+      })
+    } catch (err) {
+      setRowErrors((precedent) => ({
+        ...precedent,
+        [enfantId]: err instanceof Error ? err.message : "Impossible d'annuler.",
+      }))
+    } finally {
+      setSavingIds((precedent) => {
+        const suivant = new Set(precedent)
+        suivant.delete(enfantId)
+        return suivant
+      })
+    }
   }
 
   const valeursPresences = Object.values(presences)
@@ -157,28 +201,29 @@ export default function PresencesPage() {
           />
         ) : (
           <ul className="flex flex-col gap-3">
-          {enfantsActifs.map((enfant) => {
-            const presence = presences[enfant.id]
-            const pointage: PointageJour = {
-              statut: presence?.statut ?? null,
-              heure_arrivee: presence?.heure_arrivee ?? null,
-              heure_depart: presence?.heure_depart ?? null,
-              repas: presence?.repas ?? false,
-            }
-            return (
-              <PresenceRow
-                key={enfant.id}
-                enfant={enfant}
-                pointage={pointage}
-                saving={savingIds.has(enfant.id)}
-                error={rowErrors[enfant.id] ?? null}
-                onChangeStatut={(statut) => handleChangeStatut(enfant.id, statut)}
-                onChangeHeure={(champ, valeur) =>
-                  handleChangeHeure(enfant.id, champ, valeur)
-                }
-                onChangeRepas={(repas) => handleChangeRepas(enfant.id, repas)}
-              />
-            )
+            {enfantsActifs.map((enfant) => {
+              const presence = presences[enfant.id]
+              const pointage: PointageJour = {
+                statut: presence?.statut ?? null,
+                heure_arrivee: presence?.heure_arrivee ?? null,
+                heure_depart: presence?.heure_depart ?? null,
+                repas: presence?.repas ?? false,
+              }
+              return (
+                <PresenceRow
+                  key={enfant.id}
+                  enfant={enfant}
+                  pointage={pointage}
+                  saving={savingIds.has(enfant.id)}
+                  error={rowErrors[enfant.id] ?? null}
+                  onChangeStatut={(statut) => handleChangeStatut(enfant.id, statut)}
+                  onChangeHeure={(champ, valeur) =>
+                    handleChangeHeure(enfant.id, champ, valeur)
+                  }
+                  onChangeRepas={(repas) => handleChangeRepas(enfant.id, repas)}
+                  onAnnuler={() => void handleAnnuler(enfant.id)}
+                />
+              )
             })}
           </ul>
         )}

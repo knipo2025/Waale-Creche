@@ -25,6 +25,17 @@ export async function listPaiements(crecheId: string): Promise<PaiementAvecEnfan
   return (data ?? []) as unknown as PaiementAvecEnfant[]
 }
 
+export async function getPaiement(id: string): Promise<Paiement> {
+  const { data, error } = await supabase
+    .from('paiements')
+    .select(PAIEMENT_COLUMNS)
+    .eq('id', id)
+    .single()
+
+  if (error) throw error
+  return data as unknown as Paiement
+}
+
 export async function createPaiement(
   values: PaiementFormValues,
   crecheId: string,
@@ -37,6 +48,26 @@ export async function createPaiement(
 
   if (error) throw error
   return data as unknown as Paiement
+}
+
+export async function updatePaiement(
+  id: string,
+  values: PaiementFormValues,
+): Promise<Paiement> {
+  const { data, error } = await supabase
+    .from('paiements')
+    .update(values)
+    .eq('id', id)
+    .select(PAIEMENT_COLUMNS)
+    .single()
+
+  if (error) throw error
+  return data as unknown as Paiement
+}
+
+export async function deletePaiement(id: string): Promise<void> {
+  const { error } = await supabase.from('paiements').delete().eq('id', id)
+  if (error) throw error
 }
 
 export const TYPES_PAIEMENT: TypePaiement[] = ['Mensualité', 'Inscription', 'Autre']

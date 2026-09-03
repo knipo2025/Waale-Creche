@@ -1,15 +1,17 @@
-import { Receipt } from 'lucide-react'
+import { Pencil, Receipt, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import Avatar from './Avatar'
 import { totalPaiementsRecus } from '../lib/enfants'
 import { formatDateFr, formatMoisAnnee } from '../lib/format'
-import { MODE_PAIEMENT_LABELS, STATUT_PAIEMENT_STYLES } from '../lib/paiements'
+import { deletePaiement, MODE_PAIEMENT_LABELS, STATUT_PAIEMENT_STYLES } from '../lib/paiements'
 import { partagerOuTelechargerRecu } from '../lib/receipt'
 import {
   calculerAgeEnMois,
   calculerGroupe,
   calculerSoldeImpaye,
   calculerTarifMensuel,
+  dateFinCalculSolde,
   formatFCFA,
 } from '../lib/tariffs'
 import type { Creche } from '../types/creche'
@@ -20,13 +22,17 @@ export default function PaiementCard({
   paiement,
   enfant,
   creche,
+  onSupprime,
 }: {
   paiement: PaiementAvecEnfant
   enfant: EnfantAvecPaiements | undefined
   creche: Creche | null
+  onSupprime: (id: string) => void
 }) {
   const [generation, setGeneration] = useState(false)
   const [erreur, setErreur] = useState<string | null>(null)
+  const [confirmerSuppression, setConfirmerSuppression] = useState(false)
+  const [suppressionEnCours, setSuppressionEnCours] = useState(false)
 
   async function handleRecu() {
     if (!enfant) {
@@ -48,6 +54,7 @@ export default function PaiementCard({
         enfant.date_inscription,
         tarifMensuel,
         totalPaiementsRecus(enfant.paiements),
+        dateFinCalculSolde(enfant),
       )
       await partagerOuTelechargerRecu(paiement, enfant, creche, soldeRestant)
     } catch (err) {
@@ -56,6 +63,18 @@ export default function PaiementCard({
       )
     } finally {
       setGeneration(false)
+    }
+  }
+
+  async function handleSupprimer() {
+    setSuppressionEnCours(true)
+    setErreur(null)
+    try {
+      await deletePaiement(paiement.id)
+      onSupprime(paiement.id)
+    } catch (err) {
+      setErreur(err instanceof Error ? err.message : 'Impossible de supprimer.')
+      setSuppressionEnCours(false)
     }
   }
 
@@ -78,9 +97,28 @@ export default function PaiementCard({
             </p>
           </div>
         </div>
-        <p className="shrink-0 font-display text-base font-semibold tabular-nums text-encre">
-          {formatFCFA(paiement.montant)}
-        </p>
+        <div className="flex shrink-0 flex-col items-end gap-1">
+          <p className="font-display text-base font-semibold tabular-nums text-encre">
+            {formatFCFA(paiement.montant)}
+          </p>
+          <div className="flex items-center gap-1">
+            <Link
+              to={`/paiements/${paiement.id}/modifier`}
+              aria-label="Modifier le paiement"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-ardoise transition active:bg-neutre-50"
+            >
+              <Pencil size={15} />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setConfirmerSuppression(true)}
+              aria-label="Supprimer le paiement"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-ardoise transition active:bg-neutre-50"
+            >
+              <Trash2 size={15} />
+            </button>
+          </div>
+        </div>
       </div>
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
@@ -101,15 +139,41 @@ export default function PaiementCard({
 
       {erreur && <p className="mt-2 text-xs text-critique-600">{erreur}</p>}
 
-      <button
-        type="button"
-        onClick={() => void handleRecu()}
-        disabled={generation}
-        className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brume text-sm font-medium text-encre transition active:bg-neutre-50 disabled:opacity-60"
-      >
-        <Receipt size={18} />
-        {generation ? 'Génération…' : 'Reçu'}
-      </button>
+      {confirmerSuppression ? (
+        <div className="mt-3 flex flex-col gap-2 rounded-xl bg-critique-50 p-3">
+          <p className="text-xs text-critique-700">
+            Supprimer définitivement ce paiement ? Cette action est irréversible.
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setConfirmerSuppression(false)}
+              disabled={suppressionEnCours}
+              className="h-10 flex-1 rounded-lg border border-brume bg-white text-xs font-medium text-encre transition active:bg-neutre-50 disabled:opacity-60"
+            >
+              Annuler
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleSupprimer()}
+              disabled={suppressionEnCours}
+              className="h-10 flex-1 rounded-lg bg-critique-600 text-xs font-semibold text-white transition active:bg-critique-700 disabled:opacity-60"
+            >
+              {suppressionEnCours ? 'Suppression…' : 'Supprimer'}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => void handleRecu()}
+          disabled={generation}
+          className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-brume text-sm font-medium text-encre transition active:bg-neutre-50 disabled:opacity-60"
+        >
+          <Receipt size={18} />
+          {generation ? 'Génération…' : 'Reçu'}
+        </button>
+      )}
     </li>
   )
 }

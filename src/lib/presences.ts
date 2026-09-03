@@ -34,6 +34,11 @@ export async function upsertPresence(
   return data as unknown as Presence
 }
 
+export async function deletePresence(id: string): Promise<void> {
+  const { error } = await supabase.from('presences').delete().eq('id', id)
+  if (error) throw error
+}
+
 export const STATUTS_PRESENCE: StatutPresence[] = ['Présent', 'Absent', 'Malade', 'Congé']
 
 export const STATUT_PRESENCE_STYLES: Record<StatutPresence, string> = {

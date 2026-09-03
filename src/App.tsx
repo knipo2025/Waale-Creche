@@ -10,6 +10,7 @@ import PaiementFormPage from './pages/PaiementFormPage'
 import PaiementsPage from './pages/PaiementsPage'
 import ParametresPage from './pages/ParametresPage'
 import PresencesPage from './pages/PresencesPage'
+import ReinitialiserMotDePassePage from './pages/ReinitialiserMotDePassePage'
 
 function App() {
   return (
@@ -17,6 +18,10 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/reinitialiser-mot-de-passe"
+            element={<ReinitialiserMotDePassePage />}
+          />
           <Route
             path="/enfants"
             element={
@@ -59,6 +64,14 @@ function App() {
           />
           <Route
             path="/paiements/nouveau"
+            element={
+              <ProtectedRoute>
+                <PaiementFormPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/paiements/:id/modifier"
             element={
               <ProtectedRoute>
                 <PaiementFormPage />

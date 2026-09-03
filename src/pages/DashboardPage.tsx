@@ -24,6 +24,7 @@ import {
   calculerGroupe,
   calculerSoldeImpaye,
   calculerTarifMensuel,
+  dateFinCalculSolde,
   formatFCFA,
 } from '../lib/tariffs'
 import type { EnfantAvecPaiements } from '../types/enfant'
@@ -89,6 +90,7 @@ export default function DashboardPage() {
         enfant.date_inscription,
         tarifMensuel,
         totalPaiementsRecus(enfant.paiements),
+        dateFinCalculSolde(enfant),
       )
       return { enfant, tarifMensuel, solde }
     })

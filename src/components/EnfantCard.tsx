@@ -6,6 +6,7 @@ import {
   calculerGroupe,
   calculerSoldeImpaye,
   calculerTarifMensuel,
+  dateFinCalculSolde,
   formatFCFA,
 } from '../lib/tariffs'
 import { totalPaiementsRecus } from '../lib/enfants'
@@ -30,6 +31,7 @@ export default function EnfantCard({ enfant }: { enfant: EnfantAvecPaiements }) 
     enfant.date_inscription,
     tarifMensuel,
     totalPaiementsRecus(enfant.paiements),
+    dateFinCalculSolde(enfant),
   )
 
   return (

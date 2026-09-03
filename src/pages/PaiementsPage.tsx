@@ -18,7 +18,9 @@ type Onglet = 'historique' | 'soldes'
 export default function PaiementsPage() {
   const { profile, creche } = useAuth()
   const location = useLocation()
-  const recuGenere = (location.state as { recuGenere?: string } | null)?.recuGenere
+  const etatNavigation = location.state as { recuGenere?: string; succes?: string } | null
+  const recuGenere = etatNavigation?.recuGenere
+  const messageSucces = etatNavigation?.succes
 
   const [onglet, setOnglet] = useState<Onglet>('historique')
   const [paiements, setPaiements] = useState<PaiementAvecEnfant[]>([])
@@ -64,6 +66,7 @@ export default function PaiementsPage() {
             Paiement enregistré — reçu <span className="font-semibold">{recuGenere}</span>
           </Banner>
         )}
+        {messageSucces && <Banner tone="succes">{messageSucces}</Banner>}
 
         <div className="grid grid-cols-2 gap-2 rounded-xl bg-neutre-50 p-1">
           <button
@@ -115,6 +118,9 @@ export default function PaiementsPage() {
                   paiement={paiement}
                   enfant={enfants.find((e) => e.id === paiement.enfant_id)}
                   creche={creche}
+                  onSupprime={(id) =>
+                    setPaiements((precedent) => precedent.filter((p) => p.id !== id))
+                  }
                 />
               ))}
             </ul>

@@ -218,6 +218,10 @@ function validerLigneEnfant(ligne, index, crecheId) {
   const dateInscription = normaliserDate(ligne.date_inscription)
   if (dateInscription === undefined) erreurs.push(`date_inscription invalide : "${ligne.date_inscription}"`)
 
+  const dateSortie = normaliserDate(ligne.date_sortie)
+  if (dateSortie === undefined) erreurs.push(`date_sortie invalide : "${ligne.date_sortie}"`)
+  if (statut === 'Sorti' && !dateSortie) erreurs.push('date_sortie requise pour un enfant Sorti')
+
   const parent1Nom = videVersNull(ligne.parent1_nom)
   const parent1Prenom = videVersNull(ligne.parent1_prenom)
   const parent1Telephone = videVersNull(ligne.parent1_telephone)
@@ -240,6 +244,7 @@ function validerLigneEnfant(ligne, index, crecheId) {
       option_garderie: optionGarderie,
       statut,
       ...(dateInscription ? { date_inscription: dateInscription } : {}),
+      date_sortie: dateSortie,
       allergies: videVersNull(ligne.allergies),
       medecin_nom: videVersNull(ligne.medecin_nom),
       medecin_telephone: videVersNull(ligne.medecin_telephone),
