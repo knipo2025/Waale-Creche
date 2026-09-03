@@ -1,6 +1,6 @@
 import { Baby, Plus, Search, SearchX } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import AppLayout from '../components/AppLayout'
 import Banner from '../components/Banner'
 import EmptyState from '../components/EmptyState'
@@ -22,6 +22,8 @@ function normaliser(texte: string): string {
 
 export default function EnfantsPage() {
   const { profile } = useAuth()
+  const location = useLocation()
+  const messageSucces = (location.state as { succes?: string } | null)?.succes
   const [enfants, setEnfants] = useState<EnfantAvecPaiements[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -82,6 +84,7 @@ export default function EnfantsPage() {
           />
         </div>
 
+        {messageSucces && <Banner tone="succes">{messageSucces}</Banner>}
         {error && <Banner tone="critique">{error}</Banner>}
 
         {loading ? (

@@ -1,11 +1,11 @@
-import { ArrowLeft, MessageCircle, Pencil } from 'lucide-react'
+import { ArrowLeft, MessageCircle, Pencil, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import Avatar from '../components/Avatar'
 import Banner from '../components/Banner'
 import { PleinEcranLoading } from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
-import { getEnfant, listEnfants, totalPaiementsRecus } from '../lib/enfants'
+import { deleteEnfant, getEnfant, listEnfants, totalPaiementsRecus } from '../lib/enfants'
 import {
   calculerAgeEnMois,
   calculerGroupe,
@@ -55,6 +55,10 @@ export default function EnfantDetailPage() {
   const [totalRecu, setTotalRecu] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  const [confirmerSuppression, setConfirmerSuppression] = useState(false)
+  const [suppressionEnCours, setSuppressionEnCours] = useState(false)
+  const [erreurSuppression, setErreurSuppression] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id || !profile?.creche_id) return
@@ -117,6 +121,23 @@ export default function EnfantDetailPage() {
     enfant.option_garderie,
   )
   const solde = calculerSoldeImpaye(enfant.date_inscription, tarifMensuel, totalRecu)
+
+  async function handleSupprimer() {
+    if (!enfant) return
+    setSuppressionEnCours(true)
+    setErreurSuppression(null)
+    try {
+      await deleteEnfant(enfant.id)
+      navigate('/enfants', {
+        state: { succes: `${enfant.prenom} ${enfant.nom} a été supprimé(e).` },
+      })
+    } catch (err) {
+      setErreurSuppression(
+        err instanceof Error ? err.message : 'Impossible de supprimer cet enfant.',
+      )
+      setSuppressionEnCours(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-papier pb-8">
@@ -238,6 +259,48 @@ export default function EnfantDetailPage() {
             <Champ label="Adresse" value={enfant.parent2_adresse} />
           </Section>
         )}
+
+        <section className="rounded-card border border-critique-50 bg-critique-50 p-4">
+          {confirmerSuppression ? (
+            <div className="flex flex-col gap-3">
+              <p className="text-sm text-critique-700">
+                Supprimer définitivement <strong>{enfant.prenom} {enfant.nom}</strong> ?
+                Son historique de paiements et de présences sera aussi supprimé.
+                Cette action est irréversible.
+              </p>
+              {erreurSuppression && (
+                <p className="text-xs text-critique-700">{erreurSuppression}</p>
+              )}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setConfirmerSuppression(false)}
+                  disabled={suppressionEnCours}
+                  className="h-12 flex-1 rounded-xl border border-brume bg-white text-sm font-medium text-encre transition active:bg-neutre-50 disabled:opacity-60"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleSupprimer()}
+                  disabled={suppressionEnCours}
+                  className="h-12 flex-1 rounded-xl bg-critique-600 text-sm font-semibold text-white transition active:bg-critique-700 disabled:opacity-60"
+                >
+                  {suppressionEnCours ? 'Suppression…' : 'Supprimer définitivement'}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirmerSuppression(true)}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-critique-600 text-sm font-semibold text-critique-600 transition active:brightness-95"
+            >
+              <Trash2 size={18} />
+              Supprimer l'enfant
+            </button>
+          )}
+        </section>
       </main>
     </div>
   )

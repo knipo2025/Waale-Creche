@@ -62,6 +62,11 @@ export async function updateEnfant(
   return data as unknown as Enfant
 }
 
+export async function deleteEnfant(id: string): Promise<void> {
+  const { error } = await supabase.from('enfants').delete().eq('id', id)
+  if (error) throw error
+}
+
 export function totalPaiementsRecus(paiements: { montant: number; statut: string }[]): number {
   return paiements
     .filter((p) => p.statut === 'Reçu')
