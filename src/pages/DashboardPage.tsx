@@ -153,8 +153,8 @@ export default function DashboardPage() {
         <Loading />
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="rounded-card border border-brume bg-white p-4">
-            <div className="flex items-center gap-2 text-ardoise">
+          <div className="rounded-2xl border border-wa-line bg-wa-surface p-5">
+            <div className="flex items-center gap-2 text-wa-muted">
               <Building2 size={16} />
               <p className="text-xs font-semibold uppercase tracking-wide">
                 Taux de remplissage
@@ -162,16 +162,16 @@ export default function DashboardPage() {
             </div>
             {creche ? (
               <>
-                <p className="mt-2 font-display text-2xl font-bold tabular-nums text-encre">
+                <p className="mt-2 font-display text-2xl font-bold tabular-nums text-wa-ink">
                   {stats.tauxRemplissage?.toFixed(0)} %
                 </p>
-                <p className="text-xs text-ardoise">
+                <p className="text-xs text-wa-muted">
                   {stats.enfantsActifsCount} / {creche.capacite} places occupées
                 </p>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-neutre-50">
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-wa-line">
                   <div
                     className={`h-full rounded-full ${
-                      stats.alerteRemplissage ? 'bg-attention-600' : 'bg-succes-600'
+                      stats.alerteRemplissage ? 'bg-wa-warning' : 'bg-wa-green-600'
                     }`}
                     style={{
                       width: `${Math.min(100, stats.tauxRemplissage ?? 0)}%`,
@@ -180,7 +180,7 @@ export default function DashboardPage() {
                 </div>
               </>
             ) : (
-              <p className="mt-2 text-sm text-ardoise">
+              <p className="mt-2 text-sm text-wa-muted">
                 Capacité non configurée — voir Paramètres.
               </p>
             )}
@@ -211,13 +211,13 @@ export default function DashboardPage() {
             />
           </div>
 
-          <section className="rounded-card border border-brume bg-white p-4">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ardoise">
+          <section className="rounded-2xl border border-wa-line bg-wa-surface p-5">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-wa-muted">
               Alertes
             </h2>
 
             {aucuneAlerte ? (
-              <div className="flex items-center gap-2 text-succes-700">
+              <div className="flex items-center gap-2 text-wa-green-700">
                 <CheckCircle2 size={18} />
                 <p className="text-sm">Aucune alerte — tout va bien.</p>
               </div>
@@ -225,8 +225,8 @@ export default function DashboardPage() {
               <div className="flex flex-col gap-3">
                 {stats.alerteRemplissage && creche && (
                   <div className="flex items-start gap-2 rounded-xl bg-attention-50 p-3">
-                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-attention-600" />
-                    <p className="text-sm text-attention-600">
+                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-wa-warning" />
+                    <p className="text-sm text-wa-warning">
                       Taux de remplissage ({stats.tauxRemplissage?.toFixed(0)} %) sous
                       l'objectif de {creche.objectif_remplissage} %.
                     </p>
@@ -235,8 +235,8 @@ export default function DashboardPage() {
 
                 {stats.alerteImpayesGlobale && creche && (
                   <div className="flex items-start gap-2 rounded-xl bg-attention-50 p-3">
-                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-attention-600" />
-                    <p className="text-sm text-attention-600">
+                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-wa-warning" />
+                    <p className="text-sm text-wa-warning">
                       Impayés à {stats.tauxImpayes.toFixed(0)} % du chiffre d'affaires
                       mensuel attendu (seuil : {creche.seuil_impaye_taux} %).
                     </p>
@@ -247,15 +247,20 @@ export default function DashboardPage() {
                   <Link
                     key={enfant.id}
                     to={`/enfants/${enfant.id}`}
-                    className="flex items-center justify-between gap-2 rounded-xl bg-critique-50 p-3 transition active:brightness-95"
+                    className="flex items-center justify-between gap-3 rounded-xl bg-critique-50 p-3 transition active:brightness-95"
                   >
-                    <div className="flex items-start gap-2">
-                      <AlertTriangle size={18} className="mt-0.5 shrink-0 text-critique-600" />
-                      <p className="text-sm text-critique-700">
-                        {enfant.prenom} {enfant.nom} — solde {formatFCFA(solde)}
+                    <div className="flex min-w-0 items-start gap-2">
+                      <AlertTriangle size={18} className="mt-0.5 shrink-0 text-wa-danger" />
+                      <p className="truncate text-sm font-semibold text-wa-danger">
+                        {enfant.prenom} {enfant.nom}
                       </p>
                     </div>
-                    <ChevronRight size={18} className="shrink-0 text-critique-600" />
+                    <div className="flex shrink-0 items-center gap-2">
+                      <span className="text-sm font-bold tabular-nums text-wa-danger">
+                        {formatFCFA(solde)}
+                      </span>
+                      <ChevronRight size={18} className="text-wa-danger" />
+                    </div>
                   </Link>
                 ))}
               </div>

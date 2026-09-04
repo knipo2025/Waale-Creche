@@ -52,3 +52,4 @@ Le groupe et le tarif mensuel ne sont **jamais stockés en base** : ils sont dé
 - Toutes les requêtes de données métier (`enfants`, `paiements`, ...) sont filtrées par `creche_id`, dérivé du profil de l'utilisateur connecté (`profiles.creche_id`), jamais saisi manuellement dans un formulaire.
 - RLS Supabase : chaque table métier restreint l'accès aux lignes dont `creche_id` correspond à celui du profil de l'utilisateur authentifié.
 - Le schéma SQL de référence vit dans `schema.sql` à la racine (à coller dans le SQL Editor de Supabase).
+- Tout écran suit WAALE-DESIGN.md (couleurs, typo, composants, règles de simplicité).
