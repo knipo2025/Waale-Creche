@@ -172,27 +172,27 @@ export default function EnfantFormPage() {
 
   return (
     <div className="min-h-screen bg-papier pb-8">
-      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-brume bg-white px-4 py-4">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-wa-line bg-wa-surface px-4 py-4">
         <Link
           to={isEdition && id ? `/enfants/${id}` : '/enfants'}
           aria-label="Retour"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="font-display text-lg font-bold text-encre">
+        <h1 className="font-heading text-lg font-bold text-wa-ink">
           {isEdition ? "Modifier l'enfant" : 'Nouvel enfant'}
         </h1>
       </header>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 py-4">
         {groupe && tarifMensuel !== null && (
-          <div className="rounded-card border border-pin-100 bg-pin-50 p-4">
-            <p className="text-sm text-pin-700">
+          <div className="rounded-card border border-school-sky/30 bg-school-sky/10 p-4">
+            <p className="text-sm text-school-sky">
               Âge : <span className="font-semibold">{ageEnMois} mois</span> · Groupe :{' '}
               <span className="font-semibold">{groupe}</span>
             </p>
-            <p className="text-sm text-pin-700">
+            <p className="text-sm text-school-sky">
               Tarif mensuel :{' '}
               <span className="font-semibold tabular-nums">{formatFCFA(tarifMensuel)}</span>
             </p>
@@ -255,21 +255,21 @@ export default function EnfantFormPage() {
             </select>
           </Champ>
 
-          <label className="flex min-h-14 items-center justify-between rounded-xl border border-brume bg-white px-4">
+          <label className="flex min-h-14 items-center justify-between rounded-xl border border-wa-line bg-wa-surface px-4">
             <span className={labelClass}>Option repas (+ 8 000 FCFA)</span>
             <input
               type="checkbox"
-              className="h-6 w-6 accent-pin-600"
+              className="h-6 w-6 accent-wa-green-600"
               checked={valeurs.option_repas}
               onChange={(e) => setChamp('option_repas', e.target.checked)}
             />
           </label>
 
-          <label className="flex min-h-14 items-center justify-between rounded-xl border border-brume bg-white px-4">
+          <label className="flex min-h-14 items-center justify-between rounded-xl border border-wa-line bg-wa-surface px-4">
             <span className={labelClass}>Option garderie soir (+ 10 000 FCFA)</span>
             <input
               type="checkbox"
-              className="h-6 w-6 accent-pin-600"
+              className="h-6 w-6 accent-wa-green-600"
               checked={valeurs.option_garderie}
               onChange={(e) => setChamp('option_garderie', e.target.checked)}
             />
@@ -423,7 +423,7 @@ export default function EnfantFormPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="h-14 rounded-xl bg-pin-600 text-lg font-semibold text-white transition active:bg-pin-700 disabled:opacity-60"
+          className="h-14 rounded-xl bg-wa-green-600 text-lg font-semibold text-white transition active:bg-wa-green-700 disabled:opacity-60"
         >
           {submitting ? 'Enregistrement…' : 'Enregistrer'}
         </button>

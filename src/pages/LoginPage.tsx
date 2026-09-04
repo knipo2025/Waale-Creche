@@ -51,7 +51,7 @@ export default function LoginPage() {
 
   if (modeOubli) {
     return (
-      <main className="flex min-h-screen flex-col justify-center bg-wa-bg px-6 py-12">
+      <main className="flex min-h-screen flex-col justify-center bg-papier px-6 py-12">
         <div className="mx-auto w-full max-w-sm">
           <button
             type="button"
@@ -66,7 +66,7 @@ export default function LoginPage() {
             <ArrowLeft size={20} />
           </button>
 
-          <h1 className="mb-1 font-display text-2xl font-bold text-wa-ink">
+          <h1 className="mb-1 font-heading text-2xl font-bold text-wa-ink">
             Mot de passe oublié
           </h1>
           <p className="mb-8 text-base text-wa-muted">
@@ -118,12 +118,12 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col justify-center bg-wa-bg px-6 py-12">
+    <main className="flex min-h-screen flex-col justify-center bg-papier px-6 py-12">
       <div className="mx-auto w-full max-w-sm">
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-wa-green-50 text-wa-green-700">
           <Baby size={30} />
         </div>
-        <h1 className="mb-1 text-center font-display text-2xl font-bold text-wa-ink">
+        <h1 className="mb-1 text-center font-heading text-2xl font-bold text-wa-ink">
           Waale Crèche
         </h1>
         <p className="mb-8 text-center text-base text-wa-muted">

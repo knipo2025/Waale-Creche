@@ -13,9 +13,9 @@ import { totalPaiementsRecus } from '../lib/enfants'
 import type { EnfantAvecPaiements } from '../types/enfant'
 
 const GROUPE_COLORS: Record<string, string> = {
-  Bébés: 'bg-pin-50 text-pin-700',
-  Moyens: 'bg-terracotta-100 text-terracotta-600',
-  Grands: 'bg-neutre-50 text-ardoise',
+  Bébés: 'bg-school-sky/15 text-school-sky',
+  Moyens: 'bg-school-sun/15 text-school-sun',
+  Grands: 'bg-wa-green-50 text-wa-green-700',
 }
 
 export default function EnfantCard({ enfant }: { enfant: EnfantAvecPaiements }) {
@@ -37,12 +37,12 @@ export default function EnfantCard({ enfant }: { enfant: EnfantAvecPaiements }) 
   return (
     <Link
       to={`/enfants/${enfant.id}`}
-      className="flex min-h-20 items-center justify-between gap-3 rounded-card border border-brume bg-white px-4 py-3 transition active:bg-neutre-50"
+      className="flex min-h-20 items-center justify-between gap-3 rounded-card border border-wa-line bg-wa-surface px-4 py-3 shadow-card-soft transition active:bg-wa-line"
     >
       <Avatar prenom={enfant.prenom} nom={enfant.nom} />
 
       <div className="min-w-0 flex-1">
-        <p className="truncate font-display text-base font-semibold text-encre">
+        <p className="truncate font-display text-base font-semibold text-wa-ink">
           {enfant.prenom} {enfant.nom}
         </p>
         <span
@@ -54,16 +54,16 @@ export default function EnfantCard({ enfant }: { enfant: EnfantAvecPaiements }) 
 
       <div className="flex shrink-0 items-center gap-2">
         <div className="text-right">
-          <p className="text-xs text-ardoise">Solde</p>
+          <p className="text-xs text-wa-muted">Solde</p>
           <p
             className={`text-sm font-semibold tabular-nums ${
-              solde > 0 ? 'text-critique-600' : 'text-succes-600'
+              solde > 0 ? 'text-wa-danger' : 'text-wa-money'
             }`}
           >
             {formatFCFA(solde)}
           </p>
         </div>
-        <ChevronRight size={20} className="text-brume" />
+        <ChevronRight size={20} className="text-wa-line" />
       </div>
     </Link>
   )

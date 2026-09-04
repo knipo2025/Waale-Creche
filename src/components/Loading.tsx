@@ -2,8 +2,8 @@ import { Loader2 } from 'lucide-react'
 
 export default function Loading({ label = 'Chargement…' }: { label?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 py-16 text-ardoise">
-      <Loader2 size={28} className="motion-safe:animate-spin text-pin-600" />
+    <div className="flex flex-col items-center justify-center gap-3 py-16 text-wa-muted">
+      <Loader2 size={28} className="motion-safe:animate-spin text-wa-green-600" />
       <p className="text-sm">{label}</p>
     </div>
   )
@@ -11,8 +11,8 @@ export default function Loading({ label = 'Chargement…' }: { label?: string })
 
 export function PleinEcranLoading({ label = 'Chargement…' }: { label?: string }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-papier text-ardoise">
-      <Loader2 size={28} className="motion-safe:animate-spin text-pin-600" />
+    <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-papier text-wa-muted">
+      <Loader2 size={28} className="motion-safe:animate-spin text-wa-green-600" />
       <p className="text-sm">{label}</p>
     </div>
   )

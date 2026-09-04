@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Sora:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: 'Manrope', system-ui, sans-serif;
   --font-display: 'Sora', system-ui, sans-serif;
+  --font-heading: 'Baloo 2', 'Sora', system-ui, sans-serif;
 
   --color-pin-50: #E1EEEA;
   --color-pin-100: #C3DED6;
@@ -14,7 +15,7 @@
   --color-terracotta-500: #D9683F;
   --color-terracotta-600: #C4552E;
 
-  --color-papier: #FAF9F6;
+  --color-papier: #FBF9F4;
   --color-encre: #17211D;
   --color-brume: #DCD9D2;
   --color-ardoise: #6B7169;
@@ -45,6 +46,11 @@
   --color-wa-bg: #F7F8F7;
   --color-wa-surface: #FFFFFF;
 
+  /* Accent WAALE School (en plus du vert WAALE, pas à la place) */
+  --color-school-sun: #F5A524;
+  --color-school-sky: #3BA0E0;
+  --color-school-coral: #FF7A59;
+
   --radius-card: 20px;
 }
 
@@ -53,6 +59,14 @@ body {
   color: var(--color-encre);
 }
 
-h1, h2, h3 {
+h1, h2 {
+  font-family: var(--font-heading);
+}
+
+h3 {
   font-family: var(--font-display);
+}
+
+.shadow-card-soft {
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.08);
 }

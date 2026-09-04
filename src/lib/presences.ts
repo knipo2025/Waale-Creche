@@ -42,10 +42,10 @@ export async function deletePresence(id: string): Promise<void> {
 export const STATUTS_PRESENCE: StatutPresence[] = ['Présent', 'Absent', 'Malade', 'Congé']
 
 export const STATUT_PRESENCE_STYLES: Record<StatutPresence, string> = {
-  Présent: 'bg-succes-600 text-white border-succes-600',
-  Absent: 'bg-critique-600 text-white border-critique-600',
-  Malade: 'bg-attention-600 text-white border-attention-600',
-  Congé: 'bg-pin-600 text-white border-pin-600',
+  Présent: 'bg-wa-green-600 text-white border-wa-green-600',
+  Absent: 'bg-wa-danger text-white border-wa-danger',
+  Malade: 'bg-wa-warning text-white border-wa-warning',
+  Congé: 'bg-school-sky text-white border-school-sky',
 }
 
 export function heureActuelle(): string {

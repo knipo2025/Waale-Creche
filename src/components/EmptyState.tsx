@@ -13,10 +13,10 @@ export default function EmptyState({
   action?: ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center gap-2 rounded-card border border-brume bg-white px-6 py-10 text-center">
-      <Icon size={32} className="text-ardoise" strokeWidth={1.6} />
-      <p className="font-display text-base font-semibold text-encre">{titre}</p>
-      {description && <p className="max-w-[26ch] text-sm text-ardoise">{description}</p>}
+    <div className="flex flex-col items-center gap-2 rounded-card border border-wa-line bg-wa-surface px-6 py-10 text-center shadow-card-soft">
+      <Icon size={32} className="text-wa-muted" strokeWidth={1.6} />
+      <p className="font-display text-base font-semibold text-wa-ink">{titre}</p>
+      {description && <p className="max-w-[26ch] text-sm text-wa-muted">{description}</p>}
       {action && <div className="mt-2">{action}</div>}
     </div>
   )

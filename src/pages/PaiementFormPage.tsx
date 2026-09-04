@@ -190,15 +190,15 @@ export default function PaiementFormPage() {
 
   return (
     <div className="min-h-screen bg-papier pb-8">
-      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-brume bg-white px-4 py-4">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-wa-line bg-wa-surface px-4 py-4">
         <Link
           to="/paiements"
           aria-label="Retour"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="font-display text-lg font-bold text-encre">
+        <h1 className="font-heading text-lg font-bold text-wa-ink">
           {isEdition ? 'Modifier le paiement' : 'Nouveau paiement'}
         </h1>
       </header>
@@ -212,7 +212,7 @@ export default function PaiementFormPage() {
             action={
               <Link
                 to="/enfants/nouveau"
-                className="inline-flex h-12 items-center justify-center rounded-xl bg-pin-600 px-5 text-sm font-semibold text-white transition active:bg-pin-700"
+                className="inline-flex h-12 items-center justify-center rounded-xl bg-wa-green-600 px-5 text-sm font-semibold text-white transition active:bg-wa-green-700"
               >
                 Ajouter un enfant
               </Link>
@@ -279,7 +279,7 @@ export default function PaiementFormPage() {
               }}
             />
             {suggestion !== null && (
-              <span className="text-xs text-ardoise">
+              <span className="text-xs text-wa-muted">
                 Suggestion : {formatFCFA(suggestion)}
               </span>
             )}
@@ -325,7 +325,7 @@ export default function PaiementFormPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="h-14 rounded-xl bg-pin-600 text-lg font-semibold text-white transition active:bg-pin-700 disabled:opacity-60"
+            className="h-14 rounded-xl bg-wa-green-600 text-lg font-semibold text-white transition active:bg-wa-green-700 disabled:opacity-60"
           >
             {submitting
               ? 'Enregistrement…'

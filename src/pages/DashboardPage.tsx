@@ -149,11 +149,16 @@ export default function DashboardPage() {
     <AppLayout title="Tableau de bord">
       {(profileError || error) && <Banner tone="critique">{profileError ?? error}</Banner>}
 
+      <div className="mb-1">
+        <h2 className="font-heading text-2xl font-bold text-wa-ink">Bonjour 👋</h2>
+        {creche?.nom && <p className="text-sm text-wa-muted">{creche.nom}</p>}
+      </div>
+
       {loading ? (
         <Loading />
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="rounded-2xl border border-wa-line bg-wa-surface p-5">
+          <div className="rounded-card border border-wa-line bg-wa-surface p-5 shadow-card-soft">
             <div className="flex items-center gap-2 text-wa-muted">
               <Building2 size={16} />
               <p className="text-xs font-semibold uppercase tracking-wide">
@@ -191,27 +196,29 @@ export default function DashboardPage() {
               icon={Users}
               label="Enfants inscrits"
               valeur={String(stats.enfantsActifsCount)}
+              tone="sky"
             />
             <StatCard
               icon={CalendarCheck}
               label="Présents du jour"
               valeur={`${stats.presentsAujourdhui} / ${stats.enfantsActifsCount}`}
+              tone="green"
             />
             <StatCard
               icon={Wallet}
               label="Encaissé ce mois"
               valeur={formatFCFA(stats.montantEncaisseCeMois)}
-              tone="succes"
+              tone="money"
             />
             <StatCard
               icon={CircleDollarSign}
               label="Total impayés"
               valeur={formatFCFA(stats.totalImpayes)}
-              tone={stats.totalImpayes > 0 ? 'critique' : 'default'}
+              tone="coral"
             />
           </div>
 
-          <section className="rounded-2xl border border-wa-line bg-wa-surface p-5">
+          <section className="rounded-card border border-wa-line bg-wa-surface p-5 shadow-card-soft">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-wa-muted">
               Alertes
             </h2>

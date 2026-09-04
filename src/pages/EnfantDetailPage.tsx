@@ -19,25 +19,25 @@ import { construireLienRelanceWhatsapp } from '../lib/whatsapp'
 import type { Enfant, Statut } from '../types/enfant'
 
 const STATUT_PILL_STYLES: Record<Statut, string> = {
-  Inscrit: 'bg-succes-50 text-succes-700',
-  'En attente': 'bg-attention-50 text-attention-600',
-  Sorti: 'bg-neutre-50 text-ardoise',
+  Inscrit: 'bg-wa-green-50 text-wa-green-700',
+  'En attente': 'bg-wa-warning/10 text-wa-warning',
+  Sorti: 'bg-wa-line text-wa-muted',
 }
 
 function Champ({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value) return null
   return (
     <div>
-      <p className="text-xs text-ardoise">{label}</p>
-      <p className="text-base text-encre">{value}</p>
+      <p className="text-xs text-wa-muted">{label}</p>
+      <p className="text-base text-wa-ink">{value}</p>
     </div>
   )
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-card border border-brume bg-white p-4">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ardoise">
+    <section className="rounded-card border border-wa-line bg-wa-surface p-4 shadow-card-soft">
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-wa-muted">
         {title}
       </h2>
       <div className="flex flex-col gap-3">{children}</div>
@@ -99,13 +99,13 @@ export default function EnfantDetailPage() {
   if (error || !enfant) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-papier px-6">
-        <p className="text-center text-critique-600">
+        <p className="text-center text-wa-danger">
           {error ?? 'Enfant introuvable.'}
         </p>
         <button
           type="button"
           onClick={() => navigate('/enfants')}
-          className="h-12 rounded-xl bg-pin-600 px-6 font-semibold text-white"
+          className="h-12 rounded-xl bg-wa-green-600 px-6 font-semibold text-white"
         >
           Retour à la liste
         </button>
@@ -147,21 +147,21 @@ export default function EnfantDetailPage() {
 
   return (
     <div className="min-h-screen bg-papier pb-8">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-brume bg-white px-4 py-4">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-wa-line bg-wa-surface px-4 py-4">
         <Link
           to="/enfants"
           aria-label="Retour"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="truncate font-display text-lg font-bold text-encre">
+        <h1 className="truncate font-heading text-lg font-bold text-wa-ink">
           {enfant.prenom} {enfant.nom}
         </h1>
         <Link
           to={`/enfants/${enfant.id}/modifier`}
           aria-label="Modifier"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
         >
           <Pencil size={20} />
         </Link>
@@ -170,13 +170,13 @@ export default function EnfantDetailPage() {
       <main className="flex flex-col gap-4 px-4 py-4">
         {messageSucces && <Banner tone="succes">{messageSucces}</Banner>}
 
-        <section className="rounded-card border border-brume bg-white p-4">
+        <section className="rounded-card border border-wa-line bg-wa-surface p-4 shadow-card-soft">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar prenom={enfant.prenom} nom={enfant.nom} />
               <div>
-                <p className="text-sm text-ardoise">{groupe} · {ageEnMois} mois</p>
-                <p className="text-sm text-ardoise">{SERVICE_LABELS[enfant.service]}</p>
+                <p className="text-sm text-wa-muted">{groupe} · {ageEnMois} mois</p>
+                <p className="text-sm text-wa-muted">{SERVICE_LABELS[enfant.service]}</p>
                 <span
                   className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUT_PILL_STYLES[enfant.statut]}`}
                 >
@@ -185,18 +185,18 @@ export default function EnfantDetailPage() {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xs text-ardoise">Solde impayé</p>
+              <p className="text-xs text-wa-muted">Solde impayé</p>
               <p
                 className={`font-display text-xl font-bold tabular-nums ${
-                  solde > 0 ? 'text-critique-600' : 'text-succes-600'
+                  solde > 0 ? 'text-wa-danger' : 'text-wa-money'
                 }`}
               >
                 {formatFCFA(solde)}
               </p>
             </div>
           </div>
-          <p className="mt-3 text-sm text-ardoise">
-            Tarif mensuel : <span className="font-medium text-encre">{formatFCFA(tarifMensuel)}</span>
+          <p className="mt-3 text-sm text-wa-muted">
+            Tarif mensuel : <span className="font-medium text-wa-ink">{formatFCFA(tarifMensuel)}</span>
             {(enfant.option_repas || enfant.option_garderie) && (
               <span>
                 {' '}
@@ -267,23 +267,23 @@ export default function EnfantDetailPage() {
           </Section>
         )}
 
-        <section className="rounded-card border border-critique-50 bg-critique-50 p-4">
+        <section className="rounded-card border border-wa-danger/20 bg-wa-danger/10 p-4">
           {confirmerSuppression ? (
             <div className="flex flex-col gap-3">
-              <p className="text-sm text-critique-700">
+              <p className="text-sm text-wa-danger">
                 Supprimer définitivement <strong>{enfant.prenom} {enfant.nom}</strong> ?
                 Son historique de paiements et de présences sera aussi supprimé.
                 Cette action est irréversible.
               </p>
               {erreurSuppression && (
-                <p className="text-xs text-critique-700">{erreurSuppression}</p>
+                <p className="text-xs text-wa-danger">{erreurSuppression}</p>
               )}
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setConfirmerSuppression(false)}
                   disabled={suppressionEnCours}
-                  className="h-12 flex-1 rounded-xl border border-brume bg-white text-sm font-medium text-encre transition active:bg-neutre-50 disabled:opacity-60"
+                  className="h-12 flex-1 rounded-xl border border-wa-line bg-wa-surface text-sm font-medium text-wa-ink transition active:bg-wa-line disabled:opacity-60"
                 >
                   Annuler
                 </button>
@@ -291,7 +291,7 @@ export default function EnfantDetailPage() {
                   type="button"
                   onClick={() => void handleSupprimer()}
                   disabled={suppressionEnCours}
-                  className="h-12 flex-1 rounded-xl bg-critique-600 text-sm font-semibold text-white transition active:bg-critique-700 disabled:opacity-60"
+                  className="h-12 flex-1 rounded-xl bg-wa-danger text-sm font-semibold text-white transition active:brightness-90 disabled:opacity-60"
                 >
                   {suppressionEnCours ? 'Suppression…' : 'Supprimer définitivement'}
                 </button>
@@ -301,7 +301,7 @@ export default function EnfantDetailPage() {
             <button
               type="button"
               onClick={() => setConfirmerSuppression(true)}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-critique-600 text-sm font-semibold text-critique-600 transition active:brightness-95"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-wa-danger text-sm font-semibold text-wa-danger transition active:brightness-95"
             >
               <Trash2 size={18} />
               Supprimer l'enfant

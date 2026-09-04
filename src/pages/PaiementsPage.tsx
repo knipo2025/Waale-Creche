@@ -68,14 +68,14 @@ export default function PaiementsPage() {
         )}
         {messageSucces && <Banner tone="succes">{messageSucces}</Banner>}
 
-        <div className="grid grid-cols-2 gap-2 rounded-xl bg-neutre-50 p-1">
+        <div className="grid grid-cols-2 gap-2 rounded-xl bg-wa-line p-1">
           <button
             type="button"
             onClick={() => setOnglet('historique')}
             className={`h-11 rounded-lg text-sm font-medium transition ${
               onglet === 'historique'
-                ? 'bg-white text-encre shadow-sm'
-                : 'text-ardoise'
+                ? 'bg-wa-surface text-wa-ink shadow-sm'
+                : 'text-wa-muted'
             }`}
           >
             Historique
@@ -84,7 +84,7 @@ export default function PaiementsPage() {
             type="button"
             onClick={() => setOnglet('soldes')}
             className={`h-11 rounded-lg text-sm font-medium transition ${
-              onglet === 'soldes' ? 'bg-white text-encre shadow-sm' : 'text-ardoise'
+              onglet === 'soldes' ? 'bg-wa-surface text-wa-ink shadow-sm' : 'text-wa-muted'
             }`}
           >
             Soldes par enfant
@@ -104,7 +104,7 @@ export default function PaiementsPage() {
               action={
                 <Link
                   to="/paiements/nouveau"
-                  className="inline-flex h-12 items-center justify-center rounded-xl bg-pin-600 px-5 text-sm font-semibold text-white transition active:bg-pin-700"
+                  className="inline-flex h-12 items-center justify-center rounded-xl bg-wa-green-600 px-5 text-sm font-semibold text-white transition active:bg-wa-green-700"
                 >
                   Enregistrer un paiement
                 </Link>
@@ -141,7 +141,7 @@ export default function PaiementsPage() {
       <Link
         to="/paiements/nouveau"
         aria-label="Enregistrer un paiement"
-        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-pin-600 text-white shadow-lg transition active:bg-pin-700"
+        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-wa-green-600 text-white shadow-lg transition active:bg-wa-green-700"
       >
         <Plus size={28} />
       </Link>

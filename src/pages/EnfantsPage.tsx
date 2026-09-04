@@ -73,14 +73,14 @@ export default function EnfantsPage() {
         <div className="relative">
           <Search
             size={20}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ardoise"
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-wa-muted"
           />
           <input
             type="search"
             value={recherche}
             onChange={(event) => setRecherche(event.target.value)}
             placeholder="Rechercher un enfant…"
-            className="h-14 w-full rounded-xl border border-brume bg-white pl-11 pr-4 text-base text-encre outline-none focus:border-pin-600 focus:ring-2 focus:ring-pin-100"
+            className="h-14 w-full rounded-xl border border-wa-line bg-wa-surface pl-11 pr-4 text-base text-wa-ink outline-none focus:border-wa-green-600 focus:ring-2 focus:ring-wa-green-50"
           />
         </div>
 
@@ -104,7 +104,7 @@ export default function EnfantsPage() {
               action={
                 <Link
                   to="/enfants/nouveau"
-                  className="inline-flex h-12 items-center justify-center rounded-xl bg-pin-600 px-5 text-sm font-semibold text-white transition active:bg-pin-700"
+                  className="inline-flex h-12 items-center justify-center rounded-xl bg-wa-green-600 px-5 text-sm font-semibold text-white transition active:bg-wa-green-700"
                 >
                   Ajouter le premier
                 </Link>
@@ -125,7 +125,7 @@ export default function EnfantsPage() {
       <Link
         to="/enfants/nouveau"
         aria-label="Ajouter un enfant"
-        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-pin-600 text-white shadow-lg transition active:bg-pin-700"
+        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-wa-green-600 text-white shadow-lg transition active:bg-wa-green-700"
       >
         <Plus size={28} />
       </Link>

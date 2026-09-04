@@ -15,18 +15,18 @@ export default function AppLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-papier">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-brume bg-white px-4 py-4">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-wa-line bg-wa-surface px-4 py-4">
         <div>
-          <h1 className="font-display text-lg font-bold text-encre">{title}</h1>
+          <h1 className="font-heading text-lg font-bold text-wa-ink">{title}</h1>
           {profile?.full_name && (
-            <p className="text-sm text-ardoise">{profile.full_name}</p>
+            <p className="text-sm text-wa-muted">{profile.full_name}</p>
           )}
         </div>
         <div className="flex items-center gap-1">
           <Link
             to="/parametres"
             aria-label="Paramètres"
-            className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
+            className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
           >
             <Settings size={20} />
           </Link>
@@ -34,7 +34,7 @@ export default function AppLayout({
             type="button"
             onClick={() => void signOut()}
             aria-label="Se déconnecter"
-            className="flex h-12 w-12 items-center justify-center rounded-xl text-ardoise transition active:bg-neutre-50"
+            className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
           >
             <LogOut size={22} />
           </button>

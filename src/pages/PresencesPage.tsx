@@ -174,17 +174,17 @@ export default function PresencesPage() {
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-4 gap-2">
           {[
-            { label: 'Présents', valeur: compteurs.presents, couleur: 'text-succes-600' },
-            { label: 'Absents', valeur: compteurs.absents, couleur: 'text-critique-600' },
-            { label: 'Malades', valeur: compteurs.malades, couleur: 'text-attention-600' },
-            { label: 'Repas', valeur: compteurs.repasServis, couleur: 'text-terracotta-600' },
+            { label: 'Présents', valeur: compteurs.presents, couleur: 'text-wa-green-600' },
+            { label: 'Absents', valeur: compteurs.absents, couleur: 'text-wa-danger' },
+            { label: 'Malades', valeur: compteurs.malades, couleur: 'text-wa-warning' },
+            { label: 'Repas', valeur: compteurs.repasServis, couleur: 'text-school-sun' },
           ].map((stat) => (
             <div
               key={stat.label}
-              className="rounded-card border border-brume bg-white px-2 py-3 text-center"
+              className="rounded-card border border-wa-line bg-wa-surface px-2 py-3 text-center shadow-card-soft"
             >
               <p className={`font-display text-xl font-bold tabular-nums ${stat.couleur}`}>{stat.valeur}</p>
-              <p className="text-xs text-ardoise">{stat.label}</p>
+              <p className="text-xs text-wa-muted">{stat.label}</p>
             </div>
           ))}
         </div>

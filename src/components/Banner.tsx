@@ -2,8 +2,8 @@ import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 const TONE_STYLES = {
-  succes: { classe: 'bg-succes-50 text-succes-700', Icon: CheckCircle2 },
-  critique: { classe: 'bg-critique-50 text-critique-700', Icon: AlertCircle },
+  succes: { classe: 'bg-wa-green-50 text-wa-green-700', Icon: CheckCircle2 },
+  critique: { classe: 'bg-wa-danger/10 text-wa-danger', Icon: AlertCircle },
 } as const
 
 export default function Banner({
