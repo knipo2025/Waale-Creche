@@ -167,7 +167,7 @@ export default function DashboardPage() {
             </div>
             {creche ? (
               <>
-                <p className="mt-2 font-display text-2xl font-bold tabular-nums text-wa-ink">
+                <p className="mt-2 font-heading text-2xl font-bold tabular-nums text-wa-ink">
                   {stats.tauxRemplissage?.toFixed(0)} %
                 </p>
                 <p className="text-xs text-wa-muted">

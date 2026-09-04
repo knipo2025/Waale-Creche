@@ -187,7 +187,7 @@ export default function EnfantFormPage() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 py-4">
         {groupe && tarifMensuel !== null && (
-          <div className="rounded-card border border-school-sky/30 bg-school-sky/10 p-4">
+          <div className="rounded-card border border-school-sky/30 bg-school-sky/10 p-4 shadow-card-soft">
             <p className="text-sm text-school-sky">
               Âge : <span className="font-semibold">{ageEnMois} mois</span> · Groupe :{' '}
               <span className="font-semibold">{groupe}</span>

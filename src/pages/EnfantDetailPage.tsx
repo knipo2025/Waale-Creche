@@ -187,7 +187,7 @@ export default function EnfantDetailPage() {
             <div className="text-right">
               <p className="text-xs text-wa-muted">Solde impayé</p>
               <p
-                className={`font-display text-xl font-bold tabular-nums ${
+                className={`font-heading text-xl font-bold tabular-nums ${
                   solde > 0 ? 'text-wa-danger' : 'text-wa-money'
                 }`}
               >
@@ -267,7 +267,7 @@ export default function EnfantDetailPage() {
           </Section>
         )}
 
-        <section className="rounded-card border border-wa-danger/20 bg-wa-danger/10 p-4">
+        <section className="rounded-card border border-wa-danger/20 bg-wa-danger/10 p-4 shadow-card-soft">
           {confirmerSuppression ? (
             <div className="flex flex-col gap-3">
               <p className="text-sm text-wa-danger">

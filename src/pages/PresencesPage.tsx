@@ -183,7 +183,7 @@ export default function PresencesPage() {
               key={stat.label}
               className="rounded-card border border-wa-line bg-wa-surface px-2 py-3 text-center shadow-card-soft"
             >
-              <p className={`font-display text-xl font-bold tabular-nums ${stat.couleur}`}>{stat.valeur}</p>
+              <p className={`font-heading text-xl font-bold tabular-nums ${stat.couleur}`}>{stat.valeur}</p>
               <p className="text-xs text-wa-muted">{stat.label}</p>
             </div>
           ))}

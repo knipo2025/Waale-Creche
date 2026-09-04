@@ -27,7 +27,7 @@ export default function StatCard({
         <Icon size={17} />
       </div>
       <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-wa-muted">{label}</p>
-      <p className={`mt-0.5 font-display text-2xl font-bold tabular-nums ${styles.valeur}`}>
+      <p className={`mt-0.5 font-heading text-2xl font-bold tabular-nums ${styles.valeur}`}>
         {valeur}
       </p>
       {sousTexte && <p className="mt-0.5 text-xs text-wa-muted">{sousTexte}</p>}
