@@ -5,7 +5,7 @@ import Avatar from '../components/Avatar'
 import Banner from '../components/Banner'
 import { PleinEcranLoading } from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
-import { deleteEnfant, getEnfant, listEnfants, totalPaiementsRecus } from '../lib/enfants'
+import { deleteEnfant, getEnfant, listEnfants, STATUT_ENFANT_STYLES, totalPaiementsRecus } from '../lib/enfants'
 import {
   calculerAgeEnMois,
   calculerGroupe,
@@ -16,31 +16,25 @@ import {
   SERVICE_LABELS,
 } from '../lib/tariffs'
 import { construireLienRelanceWhatsapp } from '../lib/whatsapp'
-import type { Enfant, Statut } from '../types/enfant'
-
-const STATUT_PILL_STYLES: Record<Statut, string> = {
-  Inscrit: 'bg-wa-green-50 text-wa-green-700',
-  'En attente': 'bg-wa-warning/10 text-wa-warning',
-  Sorti: 'bg-wa-line text-wa-muted',
-}
+import type { Enfant } from '../types/enfant'
 
 function Champ({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value) return null
   return (
     <div>
-      <p className="text-xs text-wa-muted">{label}</p>
-      <p className="text-base text-wa-ink">{value}</p>
+      <p className="text-xs text-muted">{label}</p>
+      <p className="text-base text-ink">{value}</p>
     </div>
   )
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-card border border-wa-line bg-wa-surface p-4 shadow-card-soft">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-wa-muted">
+    <section className="rounded-card border border-line bg-surface p-4 shadow-card-soft">
+      <h2 className="label-caps mb-3 text-sm font-bold uppercase text-muted">
         {title}
       </h2>
-      <div className="flex flex-col gap-3">{children}</div>
+      <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-4">{children}</div>
     </section>
   )
 }
@@ -98,14 +92,14 @@ export default function EnfantDetailPage() {
 
   if (error || !enfant) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-papier px-6">
-        <p className="text-center text-wa-danger">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-cream px-6">
+        <p className="text-center text-bad">
           {error ?? 'Enfant introuvable.'}
         </p>
         <button
           type="button"
           onClick={() => navigate('/enfants')}
-          className="h-12 rounded-xl bg-wa-green-600 px-6 font-semibold text-white"
+          className="h-12 rounded-full bg-terra px-6 font-semibold text-white transition active:brightness-90"
         >
           Retour à la liste
         </button>
@@ -146,57 +140,57 @@ export default function EnfantDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-papier pb-8">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-wa-line bg-wa-surface px-4 py-4">
+    <div className="min-h-screen bg-cream pb-8">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-surface px-4 py-4">
         <Link
           to="/enfants"
           aria-label="Retour"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-muted transition active:bg-cream"
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="truncate font-heading text-lg font-bold text-wa-ink">
+        <h1 className="truncate font-heading text-lg font-bold text-ink">
           {enfant.prenom} {enfant.nom}
         </h1>
         <Link
           to={`/enfants/${enfant.id}/modifier`}
           aria-label="Modifier"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-muted transition active:bg-cream"
         >
           <Pencil size={20} />
         </Link>
       </header>
 
-      <main className="flex flex-col gap-4 px-4 py-4">
+      <main className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-4">
         {messageSucces && <Banner tone="succes">{messageSucces}</Banner>}
 
-        <section className="rounded-card border border-wa-line bg-wa-surface p-4 shadow-card-soft">
+        <section className="rounded-card border border-line bg-surface p-4 shadow-card-soft">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Avatar prenom={enfant.prenom} nom={enfant.nom} />
               <div>
-                <p className="text-sm text-wa-muted">{groupe} · {ageEnMois} mois</p>
-                <p className="text-sm text-wa-muted">{SERVICE_LABELS[enfant.service]}</p>
+                <p className="text-sm text-muted">{groupe} · {ageEnMois} mois</p>
+                <p className="text-sm text-muted">{SERVICE_LABELS[enfant.service]}</p>
                 <span
-                  className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUT_PILL_STYLES[enfant.statut]}`}
+                  className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${STATUT_ENFANT_STYLES[enfant.statut]}`}
                 >
                   {enfant.statut}
                 </span>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-xs text-wa-muted">Solde impayé</p>
+              <p className="text-xs text-muted">Solde impayé</p>
               <p
                 className={`font-heading text-xl font-bold tabular-nums ${
-                  solde > 0 ? 'text-wa-danger' : 'text-wa-money'
+                  solde > 0 ? 'text-bad' : 'text-ok'
                 }`}
               >
                 {formatFCFA(solde)}
               </p>
             </div>
           </div>
-          <p className="mt-3 text-sm text-wa-muted">
-            Tarif mensuel : <span className="font-medium text-wa-ink">{formatFCFA(tarifMensuel)}</span>
+          <p className="mt-3 text-sm text-muted">
+            Tarif mensuel : <span className="font-semibold text-ink">{formatFCFA(tarifMensuel)}</span>
             {(enfant.option_repas || enfant.option_garderie) && (
               <span>
                 {' '}
@@ -220,7 +214,7 @@ export default function EnfantDetailPage() {
               )}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] text-base font-semibold text-white transition active:brightness-95"
+              className="mt-4 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-[#25D366] text-base font-semibold text-white transition active:brightness-95"
             >
               <MessageCircle size={20} />
               Relancer sur WhatsApp
@@ -267,23 +261,23 @@ export default function EnfantDetailPage() {
           </Section>
         )}
 
-        <section className="rounded-card border border-wa-danger/20 bg-wa-danger/10 p-4 shadow-card-soft">
+        <section className="rounded-card border border-bad/20 bg-bad-bg p-4 shadow-card-soft">
           {confirmerSuppression ? (
             <div className="flex flex-col gap-3">
-              <p className="text-sm text-wa-danger">
+              <p className="text-sm text-bad">
                 Supprimer définitivement <strong>{enfant.prenom} {enfant.nom}</strong> ?
                 Son historique de paiements et de présences sera aussi supprimé.
                 Cette action est irréversible.
               </p>
               {erreurSuppression && (
-                <p className="text-xs text-wa-danger">{erreurSuppression}</p>
+                <p className="text-xs text-bad">{erreurSuppression}</p>
               )}
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setConfirmerSuppression(false)}
                   disabled={suppressionEnCours}
-                  className="h-12 flex-1 rounded-xl border border-wa-line bg-wa-surface text-sm font-medium text-wa-ink transition active:bg-wa-line disabled:opacity-60"
+                  className="h-12 flex-1 rounded-xl border border-line bg-surface text-sm font-semibold text-ink transition active:bg-cream disabled:opacity-60"
                 >
                   Annuler
                 </button>
@@ -291,7 +285,7 @@ export default function EnfantDetailPage() {
                   type="button"
                   onClick={() => void handleSupprimer()}
                   disabled={suppressionEnCours}
-                  className="h-12 flex-1 rounded-xl bg-wa-danger text-sm font-semibold text-white transition active:brightness-90 disabled:opacity-60"
+                  className="h-12 flex-1 rounded-xl bg-bad text-sm font-semibold text-white transition active:brightness-90 disabled:opacity-60"
                 >
                   {suppressionEnCours ? 'Suppression…' : 'Supprimer définitivement'}
                 </button>
@@ -301,7 +295,7 @@ export default function EnfantDetailPage() {
             <button
               type="button"
               onClick={() => setConfirmerSuppression(true)}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-wa-danger text-sm font-semibold text-wa-danger transition active:brightness-95"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-bad text-sm font-semibold text-bad transition active:brightness-95"
             >
               <Trash2 size={18} />
               Supprimer l'enfant

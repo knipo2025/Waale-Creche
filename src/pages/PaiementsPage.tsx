@@ -5,8 +5,10 @@ import AppLayout from '../components/AppLayout'
 import Banner from '../components/Banner'
 import EmptyState from '../components/EmptyState'
 import EnfantCard from '../components/EnfantCard'
+import EnfantsTable from '../components/EnfantsTable'
 import Loading from '../components/Loading'
 import PaiementCard from '../components/PaiementCard'
+import PaiementsTable from '../components/PaiementsTable'
 import { useAuth } from '../contexts/AuthContext'
 import { listEnfants } from '../lib/enfants'
 import { listPaiements } from '../lib/paiements'
@@ -68,14 +70,14 @@ export default function PaiementsPage() {
         )}
         {messageSucces && <Banner tone="succes">{messageSucces}</Banner>}
 
-        <div className="grid grid-cols-2 gap-2 rounded-xl bg-wa-line p-1">
+        <div className="grid grid-cols-2 gap-2 rounded-xl bg-line p-1 md:w-80">
           <button
             type="button"
             onClick={() => setOnglet('historique')}
-            className={`h-11 rounded-lg text-sm font-medium transition ${
+            className={`h-11 rounded-lg text-sm font-semibold transition ${
               onglet === 'historique'
-                ? 'bg-wa-surface text-wa-ink shadow-sm'
-                : 'text-wa-muted'
+                ? 'bg-surface text-ink shadow-sm'
+                : 'text-muted'
             }`}
           >
             Historique
@@ -83,8 +85,8 @@ export default function PaiementsPage() {
           <button
             type="button"
             onClick={() => setOnglet('soldes')}
-            className={`h-11 rounded-lg text-sm font-medium transition ${
-              onglet === 'soldes' ? 'bg-wa-surface text-wa-ink shadow-sm' : 'text-wa-muted'
+            className={`h-11 rounded-lg text-sm font-semibold transition ${
+              onglet === 'soldes' ? 'bg-surface text-ink shadow-sm' : 'text-muted'
             }`}
           >
             Soldes par enfant
@@ -104,44 +106,57 @@ export default function PaiementsPage() {
               action={
                 <Link
                   to="/paiements/nouveau"
-                  className="inline-flex h-12 items-center justify-center rounded-xl bg-wa-green-600 px-5 text-sm font-semibold text-white transition active:bg-wa-green-700"
+                  className="inline-flex h-12 items-center justify-center rounded-full bg-terra px-5 text-sm font-semibold text-white transition active:brightness-90"
                 >
                   Enregistrer un paiement
                 </Link>
               }
             />
           ) : (
-            <ul className="flex flex-col gap-3">
-              {paiements.map((paiement) => (
-                <PaiementCard
-                  key={paiement.id}
-                  paiement={paiement}
-                  enfant={enfants.find((e) => e.id === paiement.enfant_id)}
-                  creche={creche}
-                  onSupprime={(id) =>
-                    setPaiements((precedent) => precedent.filter((p) => p.id !== id))
-                  }
-                />
-              ))}
-            </ul>
+            <>
+              <ul className="flex flex-col gap-3 md:hidden">
+                {paiements.map((paiement) => (
+                  <PaiementCard
+                    key={paiement.id}
+                    paiement={paiement}
+                    enfant={enfants.find((e) => e.id === paiement.enfant_id)}
+                    creche={creche}
+                    onSupprime={(id) =>
+                      setPaiements((precedent) => precedent.filter((p) => p.id !== id))
+                    }
+                  />
+                ))}
+              </ul>
+              <PaiementsTable
+                paiements={paiements}
+                enfants={enfants}
+                creche={creche}
+                onSupprime={(id) =>
+                  setPaiements((precedent) => precedent.filter((p) => p.id !== id))
+                }
+              />
+            </>
           )
         ) : enfants.length === 0 ? (
           <EmptyState icon={Users} titre="Aucun enfant" description="Aucun enfant enregistré pour le moment." />
         ) : (
-          <ul className="flex flex-col gap-3">
-            {enfants.map((enfant) => (
-              <li key={enfant.id}>
-                <EnfantCard enfant={enfant} />
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="flex flex-col gap-3 md:hidden">
+              {enfants.map((enfant) => (
+                <li key={enfant.id}>
+                  <EnfantCard enfant={enfant} />
+                </li>
+              ))}
+            </ul>
+            <EnfantsTable enfants={enfants} />
+          </>
         )}
       </div>
 
       <Link
         to="/paiements/nouveau"
         aria-label="Enregistrer un paiement"
-        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-wa-green-600 text-white shadow-lg transition active:bg-wa-green-700"
+        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-terra text-white shadow-lg transition active:brightness-90 md:bottom-8 md:right-8"
       >
         <Plus size={28} />
       </Link>

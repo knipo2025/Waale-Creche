@@ -189,16 +189,16 @@ export default function PaiementFormPage() {
   }
 
   return (
-    <div className="min-h-screen bg-papier pb-8">
-      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-wa-line bg-wa-surface px-4 py-4">
+    <div className="min-h-screen bg-cream pb-8">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-line bg-surface px-4 py-4">
         <Link
           to="/paiements"
           aria-label="Retour"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-muted transition active:bg-cream"
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="font-heading text-lg font-bold text-wa-ink">
+        <h1 className="font-heading text-lg font-bold text-ink">
           {isEdition ? 'Modifier le paiement' : 'Nouveau paiement'}
         </h1>
       </header>
@@ -212,7 +212,7 @@ export default function PaiementFormPage() {
             action={
               <Link
                 to="/enfants/nouveau"
-                className="inline-flex h-12 items-center justify-center rounded-xl bg-wa-green-600 px-5 text-sm font-semibold text-white transition active:bg-wa-green-700"
+                className="inline-flex h-12 items-center justify-center rounded-full bg-terra px-5 text-sm font-semibold text-white transition active:brightness-90"
               >
                 Ajouter un enfant
               </Link>
@@ -220,10 +220,17 @@ export default function PaiementFormPage() {
           />
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 py-4">
-          {error && <Banner tone="critique">{error}</Banner>}
+        <form
+          onSubmit={handleSubmit}
+          className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-4 md:grid md:grid-cols-2"
+        >
+          {error && (
+            <div className="md:col-span-2">
+              <Banner tone="critique">{error}</Banner>
+            </div>
+          )}
 
-          <Champ label="Enfant">
+          <Champ label="Enfant" pleineLargeur>
             <select
               required
               className={inputClass}
@@ -279,7 +286,7 @@ export default function PaiementFormPage() {
               }}
             />
             {suggestion !== null && (
-              <span className="text-xs text-wa-muted">
+              <span className="text-xs text-muted">
                 Suggestion : {formatFCFA(suggestion)}
               </span>
             )}
@@ -325,7 +332,7 @@ export default function PaiementFormPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="h-14 rounded-xl bg-wa-green-600 text-lg font-semibold text-white transition active:bg-wa-green-700 disabled:opacity-60"
+            className="h-14 rounded-full bg-terra text-lg font-semibold text-white transition active:brightness-90 disabled:opacity-60 md:col-span-2"
           >
             {submitting
               ? 'Enregistrement…'

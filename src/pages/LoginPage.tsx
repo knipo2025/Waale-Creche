@@ -51,7 +51,7 @@ export default function LoginPage() {
 
   if (modeOubli) {
     return (
-      <main className="flex min-h-screen flex-col justify-center bg-papier px-6 py-12">
+      <main className="flex min-h-screen flex-col justify-center bg-cream px-6 py-12">
         <div className="mx-auto w-full max-w-sm">
           <button
             type="button"
@@ -60,16 +60,16 @@ export default function LoginPage() {
               setLienEnvoye(false)
               setErreurOubli(null)
             }}
-            className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
+            className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl text-muted transition active:bg-cream"
             aria-label="Retour à la connexion"
           >
             <ArrowLeft size={20} />
           </button>
 
-          <h1 className="mb-1 font-heading text-2xl font-bold text-wa-ink">
+          <h1 className="mb-1 font-heading text-2xl font-bold text-ink">
             Mot de passe oublié
           </h1>
-          <p className="mb-8 text-base text-wa-muted">
+          <p className="mb-8 text-base text-muted">
             Indiquez votre e-mail, nous vous envoyons un lien pour choisir un
             nouveau mot de passe.
           </p>
@@ -82,7 +82,7 @@ export default function LoginPage() {
           ) : (
             <form onSubmit={handleSubmitOubli} className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
-                <label htmlFor="email-oubli" className="text-sm font-medium text-wa-ink">
+                <label htmlFor="email-oubli" className="text-sm font-semibold text-ink">
                   Adresse e-mail
                 </label>
                 <input
@@ -92,7 +92,7 @@ export default function LoginPage() {
                   required
                   value={emailOubli}
                   onChange={(event) => setEmailOubli(event.target.value)}
-                  className="h-14 rounded-xl border border-wa-line bg-wa-surface px-4 text-lg text-wa-ink outline-none focus:border-wa-green-600 focus:ring-2 focus:ring-wa-green-50"
+                  className="h-14 rounded-xl border border-line bg-surface px-4 text-lg text-ink outline-none focus:border-pin focus:ring-2 focus:ring-pin-soft"
                   placeholder="vous@exemple.com"
                 />
               </div>
@@ -106,7 +106,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={envoiEnCours}
-                className="mt-2 h-14 w-full rounded-xl bg-wa-green-600 text-lg font-semibold text-white transition active:bg-wa-green-700 disabled:opacity-60"
+                className="mt-2 h-14 w-full rounded-full bg-terra text-lg font-semibold text-white transition active:brightness-90 disabled:opacity-60"
               >
                 {envoiEnCours ? 'Envoi en cours…' : 'Envoyer le lien'}
               </button>
@@ -118,15 +118,15 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col justify-center bg-papier px-6 py-12">
+    <main className="flex min-h-screen flex-col justify-center bg-cream px-6 py-12">
       <div className="mx-auto w-full max-w-sm">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-wa-green-50 text-wa-green-700">
-          <Baby size={30} />
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-amber text-white">
+          <Baby size={30} strokeWidth={2.2} />
         </div>
-        <h1 className="mb-1 text-center font-heading text-2xl font-bold text-wa-ink">
+        <h1 className="mb-1 text-center font-heading text-2xl font-bold text-ink">
           Waale Crèche
         </h1>
-        <p className="mb-8 text-center text-base text-wa-muted">
+        <p className="mb-8 text-center text-base text-muted">
           Connectez-vous à votre espace
         </p>
 
@@ -134,7 +134,7 @@ export default function LoginPage() {
           <div className="flex flex-col gap-1">
             <label
               htmlFor="email"
-              className="text-sm font-medium text-wa-ink"
+              className="text-sm font-semibold text-ink"
             >
               Adresse e-mail
             </label>
@@ -145,7 +145,7 @@ export default function LoginPage() {
               required
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="h-14 rounded-xl border border-wa-line bg-wa-surface px-4 text-lg text-wa-ink outline-none focus:border-wa-green-600 focus:ring-2 focus:ring-wa-green-50"
+              className="h-14 rounded-xl border border-line bg-surface px-4 text-lg text-ink outline-none focus:border-pin focus:ring-2 focus:ring-pin-soft"
               placeholder="vous@exemple.com"
             />
           </div>
@@ -154,7 +154,7 @@ export default function LoginPage() {
             <div className="flex items-center justify-between">
               <label
                 htmlFor="password"
-                className="text-sm font-medium text-wa-ink"
+                className="text-sm font-semibold text-ink"
               >
                 Mot de passe
               </label>
@@ -164,7 +164,7 @@ export default function LoginPage() {
                   setEmailOubli(email)
                   setModeOubli(true)
                 }}
-                className="text-sm font-medium text-wa-green-600"
+                className="text-sm font-semibold text-pin"
               >
                 Oublié ?
               </button>
@@ -187,7 +187,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="mt-2 h-14 w-full rounded-xl bg-wa-green-600 text-lg font-semibold text-white transition active:bg-wa-green-700 disabled:opacity-60"
+            className="mt-2 h-14 w-full rounded-full bg-terra text-lg font-semibold text-white transition active:brightness-90 disabled:opacity-60"
           >
             {submitting ? 'Connexion en cours…' : 'Se connecter'}
           </button>

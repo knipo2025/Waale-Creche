@@ -31,22 +31,22 @@ export default function PresenceRow({
   onAnnuler: () => void
 }) {
   return (
-    <li className="rounded-card border border-wa-line bg-wa-surface p-4 shadow-card-soft">
+    <li className="rounded-row border border-line bg-surface p-4 shadow-card-soft">
       <div className="flex items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-3">
           <Avatar prenom={enfant.prenom} nom={enfant.nom} />
-          <p className="truncate font-display text-base font-semibold text-wa-ink">
+          <p className="truncate font-heading text-base font-semibold text-ink">
             {enfant.prenom} {enfant.nom}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          {saving && <span className="text-xs text-wa-muted">Enregistrement…</span>}
+          {saving && <span className="text-xs text-muted">Enregistrement…</span>}
           {pointage.statut && !saving && (
             <button
               type="button"
               onClick={onAnnuler}
               aria-label="Annuler le pointage"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-wa-muted transition active:bg-wa-line"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition active:bg-cream"
             >
               <X size={16} />
             </button>
@@ -62,10 +62,10 @@ export default function PresenceRow({
               key={statut}
               type="button"
               onClick={() => onChangeStatut(statut)}
-              className={`h-12 rounded-xl border text-xs font-medium transition ${
+              className={`h-12 rounded-xl border text-xs font-semibold transition ${
                 actif
                   ? STATUT_PRESENCE_STYLES[statut]
-                  : 'border-wa-line bg-wa-surface text-wa-muted active:bg-wa-line'
+                  : 'border-line bg-surface text-muted active:bg-cream'
               }`}
             >
               {statut}
@@ -78,38 +78,38 @@ export default function PresenceRow({
         <div className="mt-3 flex flex-col gap-3">
           <div className="grid grid-cols-2 gap-2">
             <label className="flex flex-col gap-1">
-              <span className="text-xs font-medium text-wa-muted">Arrivée</span>
+              <span className="text-xs font-semibold text-muted">Arrivée</span>
               <input
                 type="time"
                 value={pointage.heure_arrivee ?? heureActuelle()}
                 onChange={(e) => onChangeHeure('heure_arrivee', e.target.value)}
-                className="h-12 rounded-xl border border-wa-line bg-wa-surface px-3 text-base text-wa-ink outline-none focus:border-wa-green-600 focus:ring-2 focus:ring-wa-green-50"
+                className="h-12 rounded-xl border border-line bg-surface px-3 text-base text-ink outline-none focus:border-pin focus:ring-2 focus:ring-pin-soft"
               />
             </label>
             <label className="flex flex-col gap-1">
-              <span className="text-xs font-medium text-wa-muted">Départ</span>
+              <span className="text-xs font-semibold text-muted">Départ</span>
               <input
                 type="time"
                 value={pointage.heure_depart ?? ''}
                 onChange={(e) => onChangeHeure('heure_depart', e.target.value)}
-                className="h-12 rounded-xl border border-wa-line bg-wa-surface px-3 text-base text-wa-ink outline-none focus:border-wa-green-600 focus:ring-2 focus:ring-wa-green-50"
+                className="h-12 rounded-xl border border-line bg-surface px-3 text-base text-ink outline-none focus:border-pin focus:ring-2 focus:ring-pin-soft"
               />
             </label>
           </div>
 
-          <label className="flex h-12 items-center justify-between rounded-xl border border-wa-line bg-wa-surface px-3">
-            <span className="text-sm font-medium text-wa-ink">Repas servi</span>
+          <label className="flex h-12 items-center justify-between rounded-xl border border-line bg-surface px-3">
+            <span className="text-sm font-semibold text-ink">Repas servi</span>
             <input
               type="checkbox"
               checked={pointage.repas}
               onChange={(e) => onChangeRepas(e.target.checked)}
-              className="h-6 w-6 accent-wa-green-600"
+              className="h-6 w-6 accent-pin"
             />
           </label>
         </div>
       )}
 
-      {error && <p className="mt-2 text-xs text-wa-danger">{error}</p>}
+      {error && <p className="mt-2 text-xs text-bad">{error}</p>}
     </li>
   )
 }

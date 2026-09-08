@@ -79,33 +79,33 @@ export default function PaiementCard({
   }
 
   return (
-    <li className="rounded-card border border-wa-line bg-wa-surface p-4 shadow-card-soft">
+    <li className="rounded-row border border-line bg-surface p-4 shadow-card-soft">
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-3">
           {paiement.enfant && (
             <Avatar prenom={paiement.enfant.prenom} nom={paiement.enfant.nom} />
           )}
           <div className="min-w-0">
-            <p className="truncate font-display text-base font-semibold text-wa-ink">
+            <p className="truncate font-heading text-base font-semibold text-ink">
               {paiement.enfant
                 ? `${paiement.enfant.prenom} ${paiement.enfant.nom}`
                 : 'Enfant supprimé'}
             </p>
-            <p className="text-sm text-wa-muted">
+            <p className="text-sm text-muted">
               {paiement.type}
               {paiement.mois_concerne ? ` · ${formatMoisAnnee(paiement.mois_concerne)}` : ''}
             </p>
           </div>
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">
-          <p className="font-display text-base font-semibold tabular-nums text-wa-money">
+          <p className="font-heading text-base font-bold tabular-nums text-ok">
             {formatFCFA(paiement.montant)}
           </p>
           <div className="flex items-center gap-1">
             <Link
               to={`/paiements/${paiement.id}/modifier`}
               aria-label="Modifier le paiement"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-wa-muted transition active:bg-wa-line"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition active:bg-cream"
             >
               <Pencil size={15} />
             </Link>
@@ -113,7 +113,7 @@ export default function PaiementCard({
               type="button"
               onClick={() => setConfirmerSuppression(true)}
               aria-label="Supprimer le paiement"
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-wa-muted transition active:bg-wa-line"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-muted transition active:bg-cream"
             >
               <Trash2 size={15} />
             </button>
@@ -124,24 +124,24 @@ export default function PaiementCard({
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <span
-            className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUT_PAIEMENT_STYLES[paiement.statut]}`}
+            className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUT_PAIEMENT_STYLES[paiement.statut]}`}
           >
             {paiement.statut}
           </span>
-          <span className="text-xs text-wa-muted">
+          <span className="text-xs text-muted">
             {MODE_PAIEMENT_LABELS[paiement.mode_paiement]}
           </span>
         </div>
-        <span className="text-xs text-wa-muted">{formatDateFr(paiement.date_paiement)}</span>
+        <span className="text-xs text-muted">{formatDateFr(paiement.date_paiement)}</span>
       </div>
 
-      <p className="mt-2 font-mono text-xs text-wa-muted">{paiement.numero_recu}</p>
+      <p className="mt-2 font-mono text-xs text-muted">{paiement.numero_recu}</p>
 
-      {erreur && <p className="mt-2 text-xs text-wa-danger">{erreur}</p>}
+      {erreur && <p className="mt-2 text-xs text-bad">{erreur}</p>}
 
       {confirmerSuppression ? (
-        <div className="mt-3 flex flex-col gap-2 rounded-xl bg-wa-danger/10 p-3">
-          <p className="text-xs text-wa-danger">
+        <div className="mt-3 flex flex-col gap-2 rounded-xl bg-bad-bg p-3">
+          <p className="text-xs text-bad">
             Supprimer définitivement ce paiement ? Cette action est irréversible.
           </p>
           <div className="flex gap-2">
@@ -149,7 +149,7 @@ export default function PaiementCard({
               type="button"
               onClick={() => setConfirmerSuppression(false)}
               disabled={suppressionEnCours}
-              className="h-10 flex-1 rounded-lg border border-wa-line bg-wa-surface text-xs font-medium text-wa-ink transition active:bg-wa-line disabled:opacity-60"
+              className="h-10 flex-1 rounded-lg border border-line bg-surface text-xs font-semibold text-ink transition active:bg-cream disabled:opacity-60"
             >
               Annuler
             </button>
@@ -157,7 +157,7 @@ export default function PaiementCard({
               type="button"
               onClick={() => void handleSupprimer()}
               disabled={suppressionEnCours}
-              className="h-10 flex-1 rounded-lg bg-wa-danger text-xs font-semibold text-white transition active:brightness-90 disabled:opacity-60"
+              className="h-10 flex-1 rounded-lg bg-bad text-xs font-semibold text-white transition active:brightness-90 disabled:opacity-60"
             >
               {suppressionEnCours ? 'Suppression…' : 'Supprimer'}
             </button>
@@ -168,7 +168,7 @@ export default function PaiementCard({
           type="button"
           onClick={() => void handleRecu()}
           disabled={generation}
-          className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-wa-line text-sm font-medium text-wa-ink transition active:bg-wa-line disabled:opacity-60"
+          className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-line text-sm font-semibold text-ink transition active:bg-cream disabled:opacity-60"
         >
           <Receipt size={18} />
           {generation ? 'Génération…' : 'Reçu'}

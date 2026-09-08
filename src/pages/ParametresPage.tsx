@@ -171,7 +171,7 @@ export default function ParametresPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="h-14 rounded-xl bg-wa-green-600 text-lg font-semibold text-white transition active:bg-wa-green-700 disabled:opacity-60"
+          className="h-14 rounded-full bg-terra text-lg font-semibold text-white transition active:brightness-90 disabled:opacity-60"
         >
           {submitting ? 'Enregistrement…' : 'Enregistrer'}
         </button>

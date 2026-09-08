@@ -150,33 +150,33 @@ export default function DashboardPage() {
       {(profileError || error) && <Banner tone="critique">{profileError ?? error}</Banner>}
 
       <div className="mb-1">
-        <h2 className="font-heading text-2xl font-bold text-wa-ink">Bonjour 👋</h2>
-        {creche?.nom && <p className="text-sm text-wa-muted">{creche.nom}</p>}
+        <h2 className="font-heading text-2xl font-bold text-ink">Bonjour 👋</h2>
+        {creche?.nom && <p className="text-sm text-muted">{creche.nom}</p>}
       </div>
 
       {loading ? (
         <Loading />
       ) : (
         <div className="flex flex-col gap-4">
-          <div className="rounded-card border border-wa-line bg-wa-surface p-5 shadow-card-soft">
-            <div className="flex items-center gap-2 text-wa-muted">
-              <Building2 size={16} />
-              <p className="text-xs font-semibold uppercase tracking-wide">
+          <div className="rounded-card border border-line bg-surface p-5 shadow-card-soft">
+            <div className="flex items-center gap-2 text-muted">
+              <Building2 size={16} strokeWidth={2.2} />
+              <p className="label-caps text-xs font-bold uppercase">
                 Taux de remplissage
               </p>
             </div>
             {creche ? (
               <>
-                <p className="mt-2 font-heading text-2xl font-bold tabular-nums text-wa-ink">
+                <p className="mt-2 font-heading text-2xl font-bold tabular-nums text-ink">
                   {stats.tauxRemplissage?.toFixed(0)} %
                 </p>
-                <p className="text-xs text-wa-muted">
+                <p className="text-xs text-muted">
                   {stats.enfantsActifsCount} / {creche.capacite} places occupées
                 </p>
-                <div className="mt-3 h-2 overflow-hidden rounded-full bg-wa-line">
+                <div className="mt-3 h-2 overflow-hidden rounded-full bg-line">
                   <div
                     className={`h-full rounded-full ${
-                      stats.alerteRemplissage ? 'bg-wa-warning' : 'bg-wa-green-600'
+                      stats.alerteRemplissage ? 'bg-warn' : 'bg-ok'
                     }`}
                     style={{
                       width: `${Math.min(100, stats.tauxRemplissage ?? 0)}%`,
@@ -185,55 +185,55 @@ export default function DashboardPage() {
                 </div>
               </>
             ) : (
-              <p className="mt-2 text-sm text-wa-muted">
+              <p className="mt-2 text-sm text-muted">
                 Capacité non configurée — voir Paramètres.
               </p>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <StatCard
               icon={Users}
               label="Enfants inscrits"
               valeur={String(stats.enfantsActifsCount)}
-              tone="sky"
+              tone="neutre"
             />
             <StatCard
               icon={CalendarCheck}
               label="Présents du jour"
               valeur={`${stats.presentsAujourdhui} / ${stats.enfantsActifsCount}`}
-              tone="green"
+              tone="ok"
             />
             <StatCard
               icon={Wallet}
               label="Encaissé ce mois"
               valeur={formatFCFA(stats.montantEncaisseCeMois)}
-              tone="money"
+              tone="ok"
             />
             <StatCard
               icon={CircleDollarSign}
               label="Total impayés"
               valeur={formatFCFA(stats.totalImpayes)}
-              tone="coral"
+              tone="bad"
             />
           </div>
 
-          <section className="rounded-card border border-wa-line bg-wa-surface p-5 shadow-card-soft">
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-wa-muted">
+          <section className="rounded-card border border-line bg-surface p-5 shadow-card-soft">
+            <h2 className="label-caps mb-3 text-sm font-bold uppercase text-muted">
               Alertes
             </h2>
 
             {aucuneAlerte ? (
-              <div className="flex items-center gap-2 text-wa-green-700">
-                <CheckCircle2 size={18} />
+              <div className="flex items-center gap-2 text-ok">
+                <CheckCircle2 size={18} strokeWidth={2.2} />
                 <p className="text-sm">Aucune alerte — tout va bien.</p>
               </div>
             ) : (
               <div className="flex flex-col gap-3">
                 {stats.alerteRemplissage && creche && (
-                  <div className="flex items-start gap-2 rounded-xl bg-attention-50 p-3">
-                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-wa-warning" />
-                    <p className="text-sm text-wa-warning">
+                  <div className="flex items-start gap-2 rounded-xl bg-warn-bg p-3">
+                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-warn" strokeWidth={2.2} />
+                    <p className="text-sm text-warn">
                       Taux de remplissage ({stats.tauxRemplissage?.toFixed(0)} %) sous
                       l'objectif de {creche.objectif_remplissage} %.
                     </p>
@@ -241,9 +241,9 @@ export default function DashboardPage() {
                 )}
 
                 {stats.alerteImpayesGlobale && creche && (
-                  <div className="flex items-start gap-2 rounded-xl bg-attention-50 p-3">
-                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-wa-warning" />
-                    <p className="text-sm text-wa-warning">
+                  <div className="flex items-start gap-2 rounded-xl bg-warn-bg p-3">
+                    <AlertTriangle size={18} className="mt-0.5 shrink-0 text-warn" strokeWidth={2.2} />
+                    <p className="text-sm text-warn">
                       Impayés à {stats.tauxImpayes.toFixed(0)} % du chiffre d'affaires
                       mensuel attendu (seuil : {creche.seuil_impaye_taux} %).
                     </p>
@@ -254,19 +254,19 @@ export default function DashboardPage() {
                   <Link
                     key={enfant.id}
                     to={`/enfants/${enfant.id}`}
-                    className="flex items-center justify-between gap-3 rounded-xl bg-critique-50 p-3 transition active:brightness-95"
+                    className="flex items-center justify-between gap-3 rounded-xl bg-bad-bg p-3 transition active:brightness-95"
                   >
                     <div className="flex min-w-0 items-start gap-2">
-                      <AlertTriangle size={18} className="mt-0.5 shrink-0 text-wa-danger" />
-                      <p className="truncate text-sm font-semibold text-wa-danger">
+                      <AlertTriangle size={18} className="mt-0.5 shrink-0 text-bad" strokeWidth={2.2} />
+                      <p className="truncate text-sm font-semibold text-bad">
                         {enfant.prenom} {enfant.nom}
                       </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
-                      <span className="text-sm font-bold tabular-nums text-wa-danger">
+                      <span className="text-sm font-bold tabular-nums text-bad">
                         {formatFCFA(solde)}
                       </span>
-                      <ChevronRight size={18} className="text-wa-danger" />
+                      <ChevronRight size={18} className="text-bad" />
                     </div>
                   </Link>
                 ))}

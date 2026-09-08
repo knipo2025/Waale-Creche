@@ -5,6 +5,7 @@ import AppLayout from '../components/AppLayout'
 import Banner from '../components/Banner'
 import EmptyState from '../components/EmptyState'
 import EnfantCard from '../components/EnfantCard'
+import EnfantsTable from '../components/EnfantsTable'
 import Loading from '../components/Loading'
 import { useAuth } from '../contexts/AuthContext'
 import { listEnfants } from '../lib/enfants'
@@ -73,14 +74,14 @@ export default function EnfantsPage() {
         <div className="relative">
           <Search
             size={20}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-wa-muted"
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
           />
           <input
             type="search"
             value={recherche}
             onChange={(event) => setRecherche(event.target.value)}
             placeholder="Rechercher un enfant…"
-            className="h-14 w-full rounded-xl border border-wa-line bg-wa-surface pl-11 pr-4 text-base text-wa-ink outline-none focus:border-wa-green-600 focus:ring-2 focus:ring-wa-green-50"
+            className="h-14 w-full rounded-xl border border-line bg-surface pl-11 pr-4 text-base text-ink outline-none focus:border-pin focus:ring-2 focus:ring-pin-soft"
           />
         </div>
 
@@ -104,7 +105,7 @@ export default function EnfantsPage() {
               action={
                 <Link
                   to="/enfants/nouveau"
-                  className="inline-flex h-12 items-center justify-center rounded-xl bg-wa-green-600 px-5 text-sm font-semibold text-white transition active:bg-wa-green-700"
+                  className="inline-flex h-12 items-center justify-center rounded-full bg-terra px-5 text-sm font-semibold text-white transition active:brightness-90"
                 >
                   Ajouter le premier
                 </Link>
@@ -112,20 +113,24 @@ export default function EnfantsPage() {
             />
           )
         ) : (
-          <ul className="flex flex-col gap-3">
-            {enfantsFiltres.map((enfant) => (
-              <li key={enfant.id}>
-                <EnfantCard enfant={enfant} />
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="flex flex-col gap-3 md:hidden">
+              {enfantsFiltres.map((enfant) => (
+                <li key={enfant.id}>
+                  <EnfantCard enfant={enfant} />
+                </li>
+              ))}
+            </ul>
+
+            <EnfantsTable enfants={enfantsFiltres} />
+          </>
         )}
       </div>
 
       <Link
         to="/enfants/nouveau"
         aria-label="Ajouter un enfant"
-        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-wa-green-600 text-white shadow-lg transition active:bg-wa-green-700"
+        className="fixed bottom-24 right-4 flex h-16 w-16 items-center justify-center rounded-full bg-terra text-white shadow-lg transition active:brightness-90 md:bottom-8 md:right-8"
       >
         <Plus size={28} />
       </Link>

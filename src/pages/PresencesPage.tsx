@@ -174,17 +174,17 @@ export default function PresencesPage() {
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-4 gap-2">
           {[
-            { label: 'Présents', valeur: compteurs.presents, couleur: 'text-wa-green-600' },
-            { label: 'Absents', valeur: compteurs.absents, couleur: 'text-wa-danger' },
-            { label: 'Malades', valeur: compteurs.malades, couleur: 'text-wa-warning' },
-            { label: 'Repas', valeur: compteurs.repasServis, couleur: 'text-school-sun' },
+            { label: 'Présents', valeur: compteurs.presents, couleur: 'text-ok' },
+            { label: 'Absents', valeur: compteurs.absents, couleur: 'text-bad' },
+            { label: 'Malades', valeur: compteurs.malades, couleur: 'text-warn' },
+            { label: 'Repas', valeur: compteurs.repasServis, couleur: 'text-amber' },
           ].map((stat) => (
             <div
               key={stat.label}
-              className="rounded-card border border-wa-line bg-wa-surface px-2 py-3 text-center shadow-card-soft"
+              className="rounded-card border border-line bg-surface px-2 py-3 text-center shadow-card-soft"
             >
               <p className={`font-heading text-xl font-bold tabular-nums ${stat.couleur}`}>{stat.valeur}</p>
-              <p className="text-xs text-wa-muted">{stat.label}</p>
+              <p className="text-xs text-muted">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -200,7 +200,7 @@ export default function PresencesPage() {
             description="Le pointage du jour apparaîtra ici dès qu'un enfant sera inscrit."
           />
         ) : (
-          <ul className="flex flex-col gap-3">
+          <ul className="flex flex-col gap-3 md:grid md:grid-cols-2">
             {enfantsActifs.map((enfant) => {
               const presence = presences[enfant.id]
               const pointage: PointageJour = {

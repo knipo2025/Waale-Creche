@@ -25,7 +25,7 @@ export default function PasswordInput({
         required
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-14 w-full rounded-xl border border-wa-line bg-wa-surface px-4 pr-12 text-lg text-wa-ink outline-none focus:border-wa-green-600 focus:ring-2 focus:ring-wa-green-50"
+        className="h-14 w-full rounded-xl border border-line bg-surface px-4 pr-12 text-lg text-ink outline-none focus:border-pin focus:ring-2 focus:ring-pin-soft"
         placeholder={placeholder}
       />
       <button
@@ -33,7 +33,7 @@ export default function PasswordInput({
         onClick={() => setVisible((v) => !v)}
         aria-label={visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
         aria-pressed={visible}
-        className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg text-wa-muted transition active:bg-wa-line"
+        className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-lg text-muted transition active:bg-cream"
       >
         {visible ? <EyeOff size={20} /> : <Eye size={20} />}
       </button>

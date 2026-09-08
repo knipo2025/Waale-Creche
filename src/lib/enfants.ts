@@ -1,5 +1,11 @@
 import { supabase } from './supabase'
-import type { Enfant, EnfantAvecPaiements, EnfantFormValues } from '../types/enfant'
+import type { Enfant, EnfantAvecPaiements, EnfantFormValues, Statut } from '../types/enfant'
+
+export const STATUT_ENFANT_STYLES: Record<Statut, string> = {
+  Inscrit: 'bg-ok-bg text-ok',
+  'En attente': 'bg-warn-bg text-warn',
+  Sorti: 'bg-line text-muted',
+}
 
 const ENFANT_COLUMNS = `
   id, creche_id, nom, prenom, date_naissance, sexe,

@@ -80,7 +80,7 @@ export const MODE_PAIEMENT_LABELS: Record<ModePaiement, string> = {
 }
 
 export const STATUT_PAIEMENT_STYLES: Record<StatutPaiement, string> = {
-  Reçu: 'bg-wa-green-50 text-wa-green-700',
-  'En attente': 'bg-wa-warning/10 text-wa-warning',
-  Annulé: 'bg-wa-line text-wa-muted',
+  Reçu: 'bg-ok-bg text-ok',
+  'En attente': 'bg-warn-bg text-warn',
+  Annulé: 'bg-line text-muted',
 }

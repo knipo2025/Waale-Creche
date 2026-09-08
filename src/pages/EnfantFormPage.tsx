@@ -141,7 +141,7 @@ export default function EnfantFormPage() {
         state: {
           succes: isEdition
             ? 'Modifications enregistrées.'
-            : 'Enfant enregistré avec succès.',
+            : 'Enfant enregistré 🎉',
         },
       })
     } catch (err) {
@@ -171,28 +171,28 @@ export default function EnfantFormPage() {
   }
 
   return (
-    <div className="min-h-screen bg-papier pb-8">
-      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-wa-line bg-wa-surface px-4 py-4">
+    <div className="min-h-screen bg-cream pb-8">
+      <header className="sticky top-0 z-10 flex items-center gap-3 border-b border-line bg-surface px-4 py-4">
         <Link
           to={isEdition && id ? `/enfants/${id}` : '/enfants'}
           aria-label="Retour"
-          className="flex h-12 w-12 items-center justify-center rounded-xl text-wa-muted transition active:bg-wa-line"
+          className="flex h-12 w-12 items-center justify-center rounded-xl text-muted transition active:bg-cream"
         >
           <ArrowLeft size={22} />
         </Link>
-        <h1 className="font-heading text-lg font-bold text-wa-ink">
+        <h1 className="font-heading text-lg font-bold text-ink">
           {isEdition ? "Modifier l'enfant" : 'Nouvel enfant'}
         </h1>
       </header>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 px-4 py-4">
+      <form onSubmit={handleSubmit} className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-4">
         {groupe && tarifMensuel !== null && (
-          <div className="rounded-card border border-school-sky/30 bg-school-sky/10 p-4 shadow-card-soft">
-            <p className="text-sm text-school-sky">
+          <div className="rounded-card border border-pin-soft bg-pin-soft p-4 shadow-card-soft">
+            <p className="text-sm text-pin-ink">
               Âge : <span className="font-semibold">{ageEnMois} mois</span> · Groupe :{' '}
               <span className="font-semibold">{groupe}</span>
             </p>
-            <p className="text-sm text-school-sky">
+            <p className="text-sm text-pin-ink">
               Tarif mensuel :{' '}
               <span className="font-semibold tabular-nums">{formatFCFA(tarifMensuel)}</span>
             </p>
@@ -255,21 +255,21 @@ export default function EnfantFormPage() {
             </select>
           </Champ>
 
-          <label className="flex min-h-14 items-center justify-between rounded-xl border border-wa-line bg-wa-surface px-4">
+          <label className="flex min-h-14 items-center justify-between rounded-xl border border-line bg-surface px-4">
             <span className={labelClass}>Option repas (+ 8 000 FCFA)</span>
             <input
               type="checkbox"
-              className="h-6 w-6 accent-wa-green-600"
+              className="h-6 w-6 accent-pin"
               checked={valeurs.option_repas}
               onChange={(e) => setChamp('option_repas', e.target.checked)}
             />
           </label>
 
-          <label className="flex min-h-14 items-center justify-between rounded-xl border border-wa-line bg-wa-surface px-4">
+          <label className="flex min-h-14 items-center justify-between rounded-xl border border-line bg-surface px-4">
             <span className={labelClass}>Option garderie soir (+ 10 000 FCFA)</span>
             <input
               type="checkbox"
-              className="h-6 w-6 accent-wa-green-600"
+              className="h-6 w-6 accent-pin"
               checked={valeurs.option_garderie}
               onChange={(e) => setChamp('option_garderie', e.target.checked)}
             />
@@ -313,7 +313,7 @@ export default function EnfantFormPage() {
         </Section>
 
         <Section title="Santé">
-          <Champ label="Allergies">
+          <Champ label="Allergies" pleineLargeur>
             <textarea
               className={`${inputClass} h-24 py-3`}
               value={valeurs.allergies ?? ''}
@@ -371,7 +371,7 @@ export default function EnfantFormPage() {
               onChange={(e) => setChamp('parent1_email', e.target.value)}
             />
           </Champ>
-          <Champ label="Adresse">
+          <Champ label="Adresse" pleineLargeur>
             <input
               className={inputClass}
               value={valeurs.parent1_adresse ?? ''}
@@ -411,7 +411,7 @@ export default function EnfantFormPage() {
               onChange={(e) => setChamp('parent2_email', e.target.value)}
             />
           </Champ>
-          <Champ label="Adresse">
+          <Champ label="Adresse" pleineLargeur>
             <input
               className={inputClass}
               value={valeurs.parent2_adresse ?? ''}
@@ -423,7 +423,7 @@ export default function EnfantFormPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="h-14 rounded-xl bg-wa-green-600 text-lg font-semibold text-white transition active:bg-wa-green-700 disabled:opacity-60"
+          className="h-14 rounded-full bg-terra text-lg font-semibold text-white transition active:brightness-90 disabled:opacity-60"
         >
           {submitting ? 'Enregistrement…' : 'Enregistrer'}
         </button>
